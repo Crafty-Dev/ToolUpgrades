@@ -92,4 +92,14 @@ public class UpgradeItem {
     public static List<UpgradeItem> list() {
         return ALL;
     }
+
+    public static UpgradeItem byName(String name) {
+
+        for(UpgradeItem item : UpgradeItem.list()){
+            if(item.getId().equals(name))
+                return item;
+        }
+
+        return null;
+    }
 }

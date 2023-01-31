@@ -5,18 +5,15 @@ import de.crafty.toolupgrades.upgrade.ToolUpgrade;
 import de.crafty.toolupgrades.util.ToolManager;
 import net.md_5.bungee.api.ChatMessageType;
 import net.md_5.bungee.api.chat.TextComponent;
-import net.minecraft.nbt.NBTTagCompound;
 import org.bukkit.*;
 import org.bukkit.block.Block;
 import org.bukkit.block.CreatureSpawner;
-import org.bukkit.craftbukkit.v1_19_R1.inventory.CraftItemStack;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Item;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockBreakEvent;
-import org.bukkit.event.block.BlockDropItemEvent;
 import org.bukkit.event.block.BlockPlaceEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.ItemStack;
@@ -24,7 +21,6 @@ import org.bukkit.inventory.meta.Damageable;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.persistence.PersistentDataType;
 
-import java.util.Arrays;
 import java.util.HashMap;
 
 public class SilkyHandler implements Listener {

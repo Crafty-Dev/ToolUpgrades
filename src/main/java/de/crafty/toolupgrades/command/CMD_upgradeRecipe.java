@@ -2,20 +2,22 @@ package de.crafty.toolupgrades.command;
 
 import de.crafty.toolupgrades.ToolUpgrades;
 import de.crafty.toolupgrades.recipe.RecipeManager;
+import de.crafty.toolupgrades.recipe.UpgradeRecipe;
 import de.crafty.toolupgrades.upgrade.UpgradeItem;
 import org.bukkit.Bukkit;
+import org.bukkit.Material;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.TabExecutor;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryType;
+import org.bukkit.inventory.CraftingInventory;
 import org.bukkit.inventory.Inventory;
-import org.bukkit.inventory.InventoryView;
-import org.bukkit.inventory.ShapedRecipe;
+import org.bukkit.inventory.ItemStack;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class CMD_upgradeRecipe implements TabExecutor {
 
@@ -27,35 +29,139 @@ public class CMD_upgradeRecipe implements TabExecutor {
             return false;
 
 
-        if (args.length != 1)
-            return false;
-
-        for (ShapedRecipe recipe : RecipeManager.recipes()) {
-
-            if (!recipe.getKey().getKey().equals(args[0]))
-                continue;
-
-
-            Inventory inv = Bukkit.createInventory(null, InventoryType.WORKBENCH, "\u00a77Upgrade: " + UpgradeItem.getByStack(recipe.getResult()).getUpgrade().getDisplayName());
-            InventoryView view = player.openInventory(inv);
-
-            List<Character> chars = new ArrayList<>();
-            for (int i = 0; i < recipe.getShape().length; i++) {
-                for(int j = 0; j < recipe.getShape()[i].toCharArray().length; j++){
-                    chars.add(recipe.getShape()[i].toCharArray()[j]);
-                }
-            }
-
-            for (int i = 0; i < 9; i++) {
-                view.setItem(i + 1, recipe.getIngredientMap().get(chars.get(i)));
-            }
-
-            view.setItem(0, recipe.getResult());
-
+        if(args.length == 1 && args[0].equalsIgnoreCase("reset")){
+            player.sendMessage(ToolUpgrades.PREFIX + "Type /upgraderecipe reset \u00a7bconfirm \u00a77to reset all recipes");
             return true;
         }
 
-        player.sendMessage(ToolUpgrades.PREFIX + "Could not find recipe for \u00a7c" + args[0]);
+        if (args.length == 2) {
+
+            if(args[0].equalsIgnoreCase("reset") && args[1].equals("confirm")){
+                RecipeManager.reset();
+                player.sendMessage(ToolUpgrades.PREFIX + "Upgrade Recipes have been resetted");
+                return true;
+            }
+
+            if (args[0].equalsIgnoreCase("show")) {
+                for (UpgradeRecipe recipe : RecipeManager.recipes()) {
+                    if (!recipe.getId().equalsIgnoreCase(args[1]))
+                        continue;
+
+                    switch (recipe.getType()) {
+                        case SHAPED -> {
+                            Inventory inv = Bukkit.createInventory(null, InventoryType.WORKBENCH, recipe.getUpgrade().getUpgrade().getDisplayName() + " \u00a77(Shaped)");
+                            for (int i = 0; i < 10; i++) {
+                                inv.setItem(i, i > 0 ? new ItemStack(recipe.getIngredients()[i - 1]) : recipe.getUpgrade().getStack());
+                            }
+                            player.openInventory(inv);
+                        }
+                        case SHAPELESS -> {
+                            Inventory inv = Bukkit.createInventory(null, InventoryType.WORKBENCH, recipe.getUpgrade().getUpgrade().getDisplayName() + " \u00a77(Shapeless)");
+                            for (int i = 0; i < recipe.getIngredients().length; i++) {
+                                inv.setItem(i + 1, new ItemStack(recipe.getIngredients()[i]));
+                            }
+                            inv.setItem(0, recipe.getUpgrade().getStack());
+                            player.openInventory(inv);
+                        }
+
+                        case SMELTING -> {
+                            Inventory inv = Bukkit.createInventory(null, InventoryType.FURNACE, recipe.getUpgrade().getUpgrade().getDisplayName() + " \u00a77(Smelting)");
+                            inv.setItem(2, recipe.getUpgrade().getStack());
+                            inv.setItem(1, new ItemStack(Material.COAL, 64));
+                            inv.setItem(0, new ItemStack(recipe.getIngredients()[0]));
+                            player.openInventory(inv);
+                        }
+
+                        case BLASTING -> {
+                            Inventory inv = Bukkit.createInventory(null, InventoryType.FURNACE, recipe.getUpgrade().getUpgrade().getDisplayName() + " \u00a77(Blasting)");
+                            inv.setItem(2, recipe.getUpgrade().getStack());
+                            inv.setItem(1, new ItemStack(Material.COAL, 64));
+                            inv.setItem(0, new ItemStack(recipe.getIngredients()[0]));
+                            player.openInventory(inv);
+                        }
+
+                        case SMOKING -> {
+                            Inventory inv = Bukkit.createInventory(null, InventoryType.FURNACE, recipe.getUpgrade().getUpgrade().getDisplayName() + " \u00a77(Smoking)");
+                            inv.setItem(2, recipe.getUpgrade().getStack());
+                            inv.setItem(1, new ItemStack(Material.COAL, 64));
+                            inv.setItem(0, new ItemStack(recipe.getIngredients()[0]));
+                            player.openInventory(inv);
+                        }
+                    }
+                    return true;
+                }
+                player.sendMessage(ToolUpgrades.PREFIX + "Could not find recipe for \u00a7c" + args[1]);
+                return true;
+            }
+
+            if (args[0].equalsIgnoreCase("delete")) {
+                for (UpgradeRecipe recipe : RecipeManager.recipes()) {
+                    if (!recipe.getId().equalsIgnoreCase(args[1]))
+                        continue;
+
+                    RecipeManager.deleteRecipe(recipe);
+                    player.sendMessage(ToolUpgrades.PREFIX + "Recipe: \u00a7c" + recipe.getId() + " \u00a77has been deleted");
+                    return true;
+                }
+                player.sendMessage(ToolUpgrades.PREFIX + "Could not find recipe for \u00a7c" + args[1]);
+                return true;
+            }
+
+        }
+
+        if (args.length == 4) {
+
+            if (!args[0].equalsIgnoreCase("create"))
+                return false;
+
+            for(UpgradeRecipe recipe : RecipeManager.recipes()){
+                if(recipe.getId().equalsIgnoreCase(args[3])){
+                    player.sendMessage(ToolUpgrades.PREFIX + "Recipe Id \u00a7c" + recipe.getId() + " \u00a77is already used");
+                    return true;
+                }
+            }
+
+            UpgradeItem item = null;
+            for (UpgradeItem upgradeItem : UpgradeItem.list()) {
+                if (upgradeItem.getId().equalsIgnoreCase(args[1]))
+                    item = upgradeItem;
+            }
+
+            if (item == null) {
+                player.sendMessage(ToolUpgrades.PREFIX + "Could not find Upgrade Item: \u00a7c" + args[1]);
+                return true;
+            }
+
+            try {
+                UpgradeRecipe.Type type = UpgradeRecipe.Type.valueOf(args[2].toUpperCase());
+
+                switch (type) {
+
+                    case SHAPED, SHAPELESS -> {
+                        Inventory inv = Bukkit.createInventory(null, InventoryType.WORKBENCH, "\u00a77Creator: " + item.getUpgrade().getDisplayName());
+                        RecipeManager.CREATORS.put(inv, new UpgradeRecipe.CreationData(args[3], type, item));
+
+                        inv.setItem(0, item.getStack());
+                        player.openInventory(inv);
+                    }
+
+                    case SMELTING, BLASTING, SMOKING -> {
+                        Inventory inv = Bukkit.createInventory(null, InventoryType.FURNACE, "\u00a77Creator: " + item.getUpgrade().getDisplayName());
+                        RecipeManager.CREATORS.put(inv, new UpgradeRecipe.CreationData(args[3], type, item));
+
+                        inv.setItem(1, new ItemStack(Material.COAL, 64));
+                        inv.setItem(2, item.getStack());
+                        player.openInventory(inv);
+                    }
+
+                }
+
+            } catch (Exception e) {
+                player.sendMessage(ToolUpgrades.PREFIX + "Invalid Recipe Type: \u00a7c" + args[2]);
+                return true;
+            }
+        }
+
 
         return false;
     }
@@ -69,7 +175,21 @@ public class CMD_upgradeRecipe implements TabExecutor {
             return list;
 
         if (args.length == 1)
-            CommandUtils.fetchUpgradeRecipes(args[0], list);
+            list.addAll(List.of("reset", "show", "create", "delete").stream().filter(s -> s.toUpperCase().startsWith(args[0].toUpperCase())).toList())
+                    ;
+        if (args.length == 2 && (args[0].equalsIgnoreCase("show") || args[0].equalsIgnoreCase("delete")))
+            CommandUtils.fetchUpgradeRecipes(args[1], list);
+
+        if (args.length == 2 && args[0].equalsIgnoreCase("create"))
+            CommandUtils.fetchUpgradeItems(args[1], list);
+
+        if (args.length == 3 && args[0].equalsIgnoreCase("create")) {
+            List<String> types = new ArrayList<>();
+            for (UpgradeRecipe.Type value : UpgradeRecipe.Type.values()) {
+                types.add(value.name());
+            }
+            list.addAll(types.stream().filter(type -> type.toUpperCase().startsWith(args[2])).toList());
+        }
 
         return list;
     }

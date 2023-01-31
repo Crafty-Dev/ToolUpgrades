@@ -3,7 +3,7 @@ plugins {
 }
 
 group = "de.crafty.toolupgrades"
-version = "1.0-prod"
+version = "1.1-prod"
 
 var output = project.properties["output"].toString()
 
@@ -27,7 +27,7 @@ repositories {
 dependencies {
     // Pick only one of these and read the comment in the repositories block.
     //compileOnly("org.spigotmc:spigot-api:1.19.2-R0.1-SNAPSHOT") // The Spigot API with no shadowing. Requires the OSS repo.
-    compileOnly("org.spigotmc:spigot:1.19.2-R0.1-SNAPSHOT") // The full Spigot server with no shadowing. Requires mavenLocal.
+    compileOnly("org.spigotmc:spigot:1.19.3-R0.1-SNAPSHOT") // The full Spigot server with no shadowing. Requires mavenLocal.
 }
 
 tasks {

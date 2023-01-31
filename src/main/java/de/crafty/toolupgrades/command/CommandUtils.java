@@ -39,7 +39,7 @@ public class CommandUtils {
     }
 
     protected static void fetchUpgradeRecipes(String arg, List<String> completionList) {
-        RecipeManager.recipes().stream().filter(shapedRecipe -> shapedRecipe.getKey().getKey().toUpperCase().startsWith(arg.toUpperCase())).forEach(shapedRecipe -> completionList.add(shapedRecipe.getKey().getKey()));
+        RecipeManager.recipes().stream().filter(recipe -> recipe.getId().toUpperCase().startsWith(arg.toUpperCase())).forEach(recipe -> completionList.add(recipe.getId()));
     }
 
 }

@@ -1,19 +1,15 @@
 package de.crafty.toolupgrades.util;
 
-import com.sun.jna.platform.unix.solaris.LibKstat;
 import de.crafty.toolupgrades.ToolUpgrades;
 import de.crafty.toolupgrades.upgrade.ToolUpgrade;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.world.entity.EnumItemSlot;
 import net.minecraft.world.item.*;
-import org.bukkit.Bukkit;
 import org.bukkit.NamespacedKey;
-import org.bukkit.craftbukkit.v1_19_R1.entity.CraftEntity;
-import org.bukkit.craftbukkit.v1_19_R1.inventory.CraftItemStack;
+import org.bukkit.craftbukkit.v1_19_R2.inventory.CraftItemStack;
 import org.bukkit.entity.EntityType;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
-import org.bukkit.persistence.PersistentDataContainer;
 import org.bukkit.persistence.PersistentDataType;
 
 import java.util.ArrayList;

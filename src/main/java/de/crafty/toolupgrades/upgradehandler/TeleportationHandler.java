@@ -5,10 +5,7 @@ import de.crafty.toolupgrades.upgrade.ToolUpgrade;
 import de.crafty.toolupgrades.util.ToolManager;
 import net.minecraft.world.item.ItemSword;
 import org.bukkit.*;
-import org.bukkit.craftbukkit.v1_19_R1.entity.CraftEnderPearl;
-import org.bukkit.craftbukkit.v1_19_R1.inventory.CraftItemStack;
-import org.bukkit.entity.EnderPearl;
-import org.bukkit.entity.EntityType;
+import org.bukkit.craftbukkit.v1_19_R2.inventory.CraftItemStack;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -31,7 +28,6 @@ public class TeleportationHandler implements Listener {
 
         Player player = event.getPlayer();
         ItemStack usedStack = player.getInventory().getItemInMainHand();
-
 
         if (event.getAction() != Action.RIGHT_CLICK_AIR && event.getAction() != Action.RIGHT_CLICK_BLOCK || !player.isSneaking())
             return;
@@ -93,7 +89,6 @@ public class TeleportationHandler implements Listener {
             return;
 
         event.getProjectile().getPersistentDataContainer().set(new NamespacedKey(ToolUpgrades.getInstance(), "teleportationPlayer"), PersistentDataType.STRING, player.getUniqueId().toString());
-
     }
 
     @EventHandler

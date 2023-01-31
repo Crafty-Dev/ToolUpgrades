@@ -40,7 +40,7 @@ public class UpgradeAbusePreventionListener implements Listener {
         if(UpgradeItem.getByStack(event.getItem()) == null)
             return;
 
-        if(event.getClickedBlock() != null && event.getClickedBlock().getType() == Material.CRAFTING_TABLE || event.getClickedBlock().getType() == Material.SMITHING_TABLE)
+        if(event.getClickedBlock() != null && (event.getClickedBlock().getType() == Material.CRAFTING_TABLE || event.getClickedBlock().getType() == Material.SMITHING_TABLE))
             return;
 
         event.setCancelled(true);

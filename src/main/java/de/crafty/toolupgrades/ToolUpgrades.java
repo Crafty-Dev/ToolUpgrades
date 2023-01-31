@@ -24,7 +24,7 @@ public class ToolUpgrades extends JavaPlugin {
 
         instance = this;
 
-        RecipeManager.registerRecipes();
+        RecipeManager.init();
 
         this.saveDefaultConfig();
 
@@ -39,7 +39,6 @@ public class ToolUpgrades extends JavaPlugin {
         Bukkit.getPluginManager().registerEvents(new PlayerApplyUpgradeListener(), this);
         Bukkit.getPluginManager().registerEvents(new UpgradeAbusePreventionListener(), this);
         Bukkit.getPluginManager().registerEvents(new UpgradeRecipeViewListener(), this);
-
 
         //Upgrade Handler
         Bukkit.getPluginManager().registerEvents(new MagnetismHandler(), this);
@@ -60,6 +59,9 @@ public class ToolUpgrades extends JavaPlugin {
 
     @Override
     public void onDisable() {
+
+        RecipeManager.saveRecipes();
+
         Bukkit.getConsoleSender().sendMessage(PREFIX + "\u00a7cPlugin disabled");
     }
 
