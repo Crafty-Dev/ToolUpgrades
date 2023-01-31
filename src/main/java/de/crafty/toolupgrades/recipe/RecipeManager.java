@@ -28,7 +28,7 @@ public class RecipeManager {
 
         Bukkit.getConsoleSender().sendMessage(ToolUpgrades.PREFIX + "\u00a7aLoading Recipes...");
 
-        if (FILE.mkdir()) {
+        if (FILE.mkdirs()) {
             Bukkit.getConsoleSender().sendMessage(ToolUpgrades.PREFIX + "Recipe Folder could not be found, initializing...");
             initDefaults();
         }

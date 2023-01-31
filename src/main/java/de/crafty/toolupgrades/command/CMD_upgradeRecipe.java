@@ -29,14 +29,26 @@ public class CMD_upgradeRecipe implements TabExecutor {
             return false;
 
 
-        if(args.length == 1 && args[0].equalsIgnoreCase("reset")){
+        if (args.length == 1 && args[0].equalsIgnoreCase("reset")) {
+
+            if(!player.isOp()){
+                player.sendMessage(ToolUpgrades.PREFIX + "\u00a7cOnly Admins are authorized to reset the Upgrade Recipes");
+                return true;
+            }
+
             player.sendMessage(ToolUpgrades.PREFIX + "Type /upgraderecipe reset \u00a7bconfirm \u00a77to reset all recipes");
             return true;
         }
 
         if (args.length == 2) {
 
-            if(args[0].equalsIgnoreCase("reset") && args[1].equals("confirm")){
+            if (args[0].equalsIgnoreCase("reset") && args[1].equals("confirm")) {
+
+                if(!player.isOp()){
+                    player.sendMessage(ToolUpgrades.PREFIX + "\u00a7cOnly Admins are authorized to reset the Upgrade Recipes");
+                    return true;
+                }
+
                 RecipeManager.reset();
                 player.sendMessage(ToolUpgrades.PREFIX + "Upgrade Recipes have been resetted");
                 return true;
@@ -95,6 +107,12 @@ public class CMD_upgradeRecipe implements TabExecutor {
             }
 
             if (args[0].equalsIgnoreCase("delete")) {
+
+                if (!player.isOp()) {
+                    player.sendMessage(ToolUpgrades.PREFIX + "\u00a7cOnly Admins are authorized to delete Upgrade Recipes");
+                    return true;
+                }
+
                 for (UpgradeRecipe recipe : RecipeManager.recipes()) {
                     if (!recipe.getId().equalsIgnoreCase(args[1]))
                         continue;
@@ -114,8 +132,13 @@ public class CMD_upgradeRecipe implements TabExecutor {
             if (!args[0].equalsIgnoreCase("create"))
                 return false;
 
-            for(UpgradeRecipe recipe : RecipeManager.recipes()){
-                if(recipe.getId().equalsIgnoreCase(args[3])){
+            if(!player.isOp()){
+                player.sendMessage(ToolUpgrades.PREFIX + "\u00a7cOnly Admins are authorized to create new Upgrade Recipes");
+                return true;
+            }
+
+            for (UpgradeRecipe recipe : RecipeManager.recipes()) {
+                if (recipe.getId().equalsIgnoreCase(args[3])) {
                     player.sendMessage(ToolUpgrades.PREFIX + "Recipe Id \u00a7c" + recipe.getId() + " \u00a77is already used");
                     return true;
                 }

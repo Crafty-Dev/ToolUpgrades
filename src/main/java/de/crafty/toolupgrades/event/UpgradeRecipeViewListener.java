@@ -27,7 +27,7 @@ public class UpgradeRecipeViewListener implements Listener {
 
         if (event.getView().getTitle().startsWith("\u00a77Creator:")) {
 
-            if (event.getSlotType() == InventoryType.SlotType.RESULT || event.getSlotType() == InventoryType.SlotType.FUEL) {
+            if (event.getSlotType() == InventoryType.SlotType.RESULT || event.getSlotType() == InventoryType.SlotType.FUEL || event.isShiftClick()) {
                 event.setCancelled(true);
                 return;
             }

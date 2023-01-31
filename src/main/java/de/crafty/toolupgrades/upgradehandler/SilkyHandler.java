@@ -54,11 +54,14 @@ public class SilkyHandler implements Listener {
 
         World world = player.getWorld();
 
+
         CreatureSpawner spawner = (CreatureSpawner) block.getState();
         ItemStack spawnerStack = new ItemStack(Material.SPAWNER);
+        boolean isEmpty = spawner.getCreatureTypeName().equals("");
+
         ItemMeta meta = spawnerStack.getItemMeta();
-        meta.setDisplayName("\u00a75Spawner \u00a77(\u00a7b" + spawner.getSpawnedType().name().toLowerCase() + "\u00a77)");
-        meta.getPersistentDataContainer().set(new NamespacedKey(ToolUpgrades.getInstance(), "type"), PersistentDataType.STRING, spawner.getSpawnedType().name());
+        meta.setDisplayName("\u00a75Spawner \u00a77(\u00a7b" + (!isEmpty ? spawner.getSpawnedType().name().toLowerCase() + "\u00a77)" : "Empty\u00a77)"));
+        meta.getPersistentDataContainer().set(new NamespacedKey(ToolUpgrades.getInstance(), "type"), PersistentDataType.STRING, !isEmpty ? spawner.getSpawnedType().name() : "");
         spawnerStack.setItemMeta(meta);
 
         world.dropItemNaturally(block.getLocation(), spawnerStack);
@@ -93,7 +96,11 @@ public class SilkyHandler implements Listener {
             return;
 
         CreatureSpawner spawner = (CreatureSpawner) block.getState();
-        spawner.setSpawnedType(EntityType.valueOf(event.getItemInHand().getItemMeta().getPersistentDataContainer().get(new NamespacedKey(ToolUpgrades.getInstance(), "type"), PersistentDataType.STRING)));
+
+        if(!event.getItemInHand().getItemMeta().getPersistentDataContainer().get(new NamespacedKey(ToolUpgrades.getInstance(), "type"), PersistentDataType.STRING).equals("")){
+            spawner.setSpawnedType(EntityType.valueOf(event.getItemInHand().getItemMeta().getPersistentDataContainer().get(new NamespacedKey(ToolUpgrades.getInstance(), "type"), PersistentDataType.STRING)));
+            spawner.update();
+        }
     }
 
 
