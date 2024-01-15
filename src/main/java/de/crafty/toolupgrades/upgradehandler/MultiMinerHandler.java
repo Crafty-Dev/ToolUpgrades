@@ -10,13 +10,15 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockBreakEvent;
+import org.bukkit.event.block.BlockDamageAbortEvent;
+import org.bukkit.event.block.BlockDamageEvent;
+import org.bukkit.event.block.BlockReceiveGameEvent;
 import org.bukkit.inventory.ItemStack;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class MultiMinerHandler implements Listener {
-
 
 
     private final List<ItemStack> currentlyInUse = new ArrayList<>();
@@ -37,7 +39,7 @@ public class MultiMinerHandler implements Listener {
         currentlyInUse.add(usedStack);
         located.forEach(b -> {
 
-            if(usedStack.getType() == Material.AIR)
+            if (usedStack.getType() == Material.AIR)
                 return;
 
             player.breakBlock(b);
@@ -45,7 +47,6 @@ public class MultiMinerHandler implements Listener {
 
         currentlyInUse.remove(usedStack);
     }
-
 
     private List<Block> locateBlocks(Block src, int max) {
         List<Block> blocks = this.getAttachedBlocks(src);

@@ -32,6 +32,10 @@ public class UpgradeItem {
 
     public static final UpgradeItem LIFE_BONUS = register("life_bonus", ToolUpgrade.LIFE_BONUS, Material.GLISTERING_MELON_SLICE, true, "\u00a77Gain extra hearts");
 
+    public static final UpgradeItem ENCHANTMENT_RELOCATION = register("enchantment_relocation", ToolUpgrade.ENCHANTMENT_RELOCATION, Material.HOPPER, true, "\u00a77Extract enchantments from an Item");
+
+    public static final UpgradeItem CELESTIAL = register("celestial", ToolUpgrade.CELESTIAL, Material.GOLD_INGOT, true, "\u00a77Enables the ability to fly when applied on all armor pieces");
+
     private static UpgradeItem register(String id, ToolUpgrade upgrade, Material material, boolean enchantmentGlint, String... lore) {
 
         ItemStack stack = new ItemStack(material);
@@ -44,6 +48,12 @@ public class UpgradeItem {
             meta.addEnchant(Enchantment.DURABILITY, 0, true);
             meta.addItemFlags(ItemFlag.HIDE_ENCHANTS);
         }
+
+        List<String> upgradeLore = meta.getLore();
+        upgradeLore.add(" ");
+        upgradeLore.add("\u00a78Applies to: ");
+        upgradeLore.add("\u00a75" + upgrade.getType().displayName());
+        meta.setLore(upgradeLore);
 
         stack.setItemMeta(meta);
 

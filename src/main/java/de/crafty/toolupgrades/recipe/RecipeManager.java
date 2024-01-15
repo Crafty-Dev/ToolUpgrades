@@ -8,6 +8,8 @@ import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
+import org.bukkit.entity.Player;
+import org.bukkit.event.inventory.InventoryType;
 import org.bukkit.inventory.*;
 
 import java.io.File;
@@ -189,6 +191,20 @@ public class RecipeManager {
         );
         defaults.add(teleportation);
 
+        UpgradeRecipe enchantment_relocation = new UpgradeRecipe("enchantment_relocation", UpgradeItem.ENCHANTMENT_RELOCATION, UpgradeRecipe.Type.SHAPED,
+                AMETHYST_SHARD, HOPPER, AMETHYST_SHARD,
+                HOPPER, BOOK, HOPPER,
+                AMETHYST_SHARD, HOPPER, AMETHYST_SHARD
+        );
+        defaults.add(enchantment_relocation);
+
+        UpgradeRecipe celestial = new UpgradeRecipe("celestial", UpgradeItem.CELESTIAL, UpgradeRecipe.Type.SHAPED,
+                PHANTOM_MEMBRANE, FEATHER, PHANTOM_MEMBRANE,
+                FEATHER, ELYTRA, FEATHER,
+                PHANTOM_MEMBRANE, FEATHER, PHANTOM_MEMBRANE
+        );
+        defaults.add(celestial);
+
         return defaults;
     }
 
@@ -279,6 +295,59 @@ public class RecipeManager {
 
     public static List<UpgradeRecipe> smokingRecipes() {
         return RECIPES.stream().filter(recipe -> recipe.getType() == UpgradeRecipe.Type.SMOKING).toList();
+    }
+
+
+    public static List<UpgradeRecipe> getRecipesFor(UpgradeItem item) {
+        List<UpgradeRecipe> list = new ArrayList<>();
+        RECIPES.stream().filter(recipe -> recipe.getUpgrade().equals(item)).forEach(list::add);
+        return list;
+    }
+
+    public static void openRecipeView(Player player, UpgradeRecipe recipe) {
+
+        switch (recipe.getType()) {
+            case SHAPED -> {
+                Inventory inv = Bukkit.createInventory(null, InventoryType.WORKBENCH, recipe.getUpgrade().getUpgrade().getDisplayName() + " \u00a77(Shaped)");
+                for (int i = 0; i < 10; i++) {
+                    inv.setItem(i, i > 0 ? new ItemStack(recipe.getIngredients()[i - 1]) : recipe.getUpgrade().getStack());
+                }
+                player.openInventory(inv);
+            }
+            case SHAPELESS -> {
+                Inventory inv = Bukkit.createInventory(null, InventoryType.WORKBENCH, recipe.getUpgrade().getUpgrade().getDisplayName() + " \u00a77(Shapeless)");
+                for (int i = 0; i < recipe.getIngredients().length; i++) {
+                    inv.setItem(i + 1, new ItemStack(recipe.getIngredients()[i]));
+                }
+                inv.setItem(0, recipe.getUpgrade().getStack());
+                player.openInventory(inv);
+            }
+
+            case SMELTING -> {
+                Inventory inv = Bukkit.createInventory(null, InventoryType.FURNACE, recipe.getUpgrade().getUpgrade().getDisplayName() + " \u00a77(Smelting)");
+                inv.setItem(2, recipe.getUpgrade().getStack());
+                inv.setItem(1, new ItemStack(Material.COAL, 64));
+                inv.setItem(0, new ItemStack(recipe.getIngredients()[0]));
+                player.openInventory(inv);
+            }
+
+            case BLASTING -> {
+                Inventory inv = Bukkit.createInventory(null, InventoryType.FURNACE, recipe.getUpgrade().getUpgrade().getDisplayName() + " \u00a77(Blasting)");
+                inv.setItem(2, recipe.getUpgrade().getStack());
+                inv.setItem(1, new ItemStack(Material.COAL, 64));
+                inv.setItem(0, new ItemStack(recipe.getIngredients()[0]));
+                player.openInventory(inv);
+            }
+
+            case SMOKING -> {
+                Inventory inv = Bukkit.createInventory(null, InventoryType.FURNACE, recipe.getUpgrade().getUpgrade().getDisplayName() + " \u00a77(Smoking)");
+                inv.setItem(2, recipe.getUpgrade().getStack());
+                inv.setItem(1, new ItemStack(Material.COAL, 64));
+                inv.setItem(0, new ItemStack(recipe.getIngredients()[0]));
+                player.openInventory(inv);
+            }
+        }
+
     }
 
 }

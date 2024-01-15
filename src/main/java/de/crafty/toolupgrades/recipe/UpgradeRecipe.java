@@ -82,11 +82,21 @@ public class UpgradeRecipe {
 
     public enum Type {
 
-        SHAPED,
-        SHAPELESS,
-        SMELTING,
-        BLASTING,
-        SMOKING
+        SHAPED ("Shaped Crafting"),
+        SHAPELESS ("Shapeless Crafting"),
+        SMELTING ("Smelting"),
+        BLASTING ("Blasting"),
+        SMOKING ("Smoking");
+
+        final String displayName;
+
+        Type(String displayName){
+            this.displayName = displayName;
+        }
+
+        public String displayName(){
+            return this.displayName;
+        }
 
     }
 

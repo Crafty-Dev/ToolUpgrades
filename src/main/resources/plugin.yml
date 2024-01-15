@@ -3,7 +3,7 @@ version: ${version}
 author: Crafty
 main: de.crafty.toolupgrades.ToolUpgrades
 
-api-version: 1.19
+api-version: '1.20'
 
 
 commands:
@@ -23,5 +23,9 @@ commands:
     description: Gives an Upgrade Item to a Player
 
   upgradeRecipe:
-    usage: /upgradeRecipe <id>
+    usage: /upgradeRecipe <show|create|delete|reset>
     description: Shows a recipe of an upgrade item
+
+  upgradeOverview:
+    usage: /upgradeOverview
+    description: Opens an overview of all available upgrade items

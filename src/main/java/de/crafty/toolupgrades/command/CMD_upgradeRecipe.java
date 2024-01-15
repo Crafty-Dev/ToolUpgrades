@@ -59,47 +59,7 @@ public class CMD_upgradeRecipe implements TabExecutor {
                     if (!recipe.getId().equalsIgnoreCase(args[1]))
                         continue;
 
-                    switch (recipe.getType()) {
-                        case SHAPED -> {
-                            Inventory inv = Bukkit.createInventory(null, InventoryType.WORKBENCH, recipe.getUpgrade().getUpgrade().getDisplayName() + " \u00a77(Shaped)");
-                            for (int i = 0; i < 10; i++) {
-                                inv.setItem(i, i > 0 ? new ItemStack(recipe.getIngredients()[i - 1]) : recipe.getUpgrade().getStack());
-                            }
-                            player.openInventory(inv);
-                        }
-                        case SHAPELESS -> {
-                            Inventory inv = Bukkit.createInventory(null, InventoryType.WORKBENCH, recipe.getUpgrade().getUpgrade().getDisplayName() + " \u00a77(Shapeless)");
-                            for (int i = 0; i < recipe.getIngredients().length; i++) {
-                                inv.setItem(i + 1, new ItemStack(recipe.getIngredients()[i]));
-                            }
-                            inv.setItem(0, recipe.getUpgrade().getStack());
-                            player.openInventory(inv);
-                        }
-
-                        case SMELTING -> {
-                            Inventory inv = Bukkit.createInventory(null, InventoryType.FURNACE, recipe.getUpgrade().getUpgrade().getDisplayName() + " \u00a77(Smelting)");
-                            inv.setItem(2, recipe.getUpgrade().getStack());
-                            inv.setItem(1, new ItemStack(Material.COAL, 64));
-                            inv.setItem(0, new ItemStack(recipe.getIngredients()[0]));
-                            player.openInventory(inv);
-                        }
-
-                        case BLASTING -> {
-                            Inventory inv = Bukkit.createInventory(null, InventoryType.FURNACE, recipe.getUpgrade().getUpgrade().getDisplayName() + " \u00a77(Blasting)");
-                            inv.setItem(2, recipe.getUpgrade().getStack());
-                            inv.setItem(1, new ItemStack(Material.COAL, 64));
-                            inv.setItem(0, new ItemStack(recipe.getIngredients()[0]));
-                            player.openInventory(inv);
-                        }
-
-                        case SMOKING -> {
-                            Inventory inv = Bukkit.createInventory(null, InventoryType.FURNACE, recipe.getUpgrade().getUpgrade().getDisplayName() + " \u00a77(Smoking)");
-                            inv.setItem(2, recipe.getUpgrade().getStack());
-                            inv.setItem(1, new ItemStack(Material.COAL, 64));
-                            inv.setItem(0, new ItemStack(recipe.getIngredients()[0]));
-                            player.openInventory(inv);
-                        }
-                    }
+                    RecipeManager.openRecipeView(player, recipe);
                     return true;
                 }
                 player.sendMessage(ToolUpgrades.PREFIX + "Could not find recipe for \u00a7c" + args[1]);

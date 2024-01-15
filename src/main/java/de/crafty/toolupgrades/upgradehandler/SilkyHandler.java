@@ -57,7 +57,7 @@ public class SilkyHandler implements Listener {
 
         CreatureSpawner spawner = (CreatureSpawner) block.getState();
         ItemStack spawnerStack = new ItemStack(Material.SPAWNER);
-        boolean isEmpty = spawner.getCreatureTypeName().equals("");
+        boolean isEmpty = spawner.getSpawnedType() == null;
 
         ItemMeta meta = spawnerStack.getItemMeta();
         meta.setDisplayName("\u00a75Spawner \u00a77(\u00a7b" + (!isEmpty ? spawner.getSpawnedType().name().toLowerCase() + "\u00a77)" : "Empty\u00a77)"));
@@ -97,7 +97,7 @@ public class SilkyHandler implements Listener {
 
         CreatureSpawner spawner = (CreatureSpawner) block.getState();
 
-        if(!event.getItemInHand().getItemMeta().getPersistentDataContainer().get(new NamespacedKey(ToolUpgrades.getInstance(), "type"), PersistentDataType.STRING).equals("")){
+        if (!event.getItemInHand().getItemMeta().getPersistentDataContainer().get(new NamespacedKey(ToolUpgrades.getInstance(), "type"), PersistentDataType.STRING).equals("")) {
             spawner.setSpawnedType(EntityType.valueOf(event.getItemInHand().getItemMeta().getPersistentDataContainer().get(new NamespacedKey(ToolUpgrades.getInstance(), "type"), PersistentDataType.STRING)));
             spawner.update();
         }

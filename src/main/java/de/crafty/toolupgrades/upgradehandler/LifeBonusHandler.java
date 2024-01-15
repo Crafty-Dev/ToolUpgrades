@@ -73,14 +73,14 @@ public class LifeBonusHandler implements Listener {
         ItemStack oldBoots = playerInv.getBoots();
 
 
-        Bukkit.getScheduler().scheduleSyncDelayedTask(ToolUpgrades.getInstance(), () -> {
+        ToolUpgrades.runPostEventTask(() -> {
 
             ItemStack helmet = playerInv.getHelmet();
             ItemStack chestplate = playerInv.getChestplate();
             ItemStack leggings = playerInv.getLeggings();
             ItemStack boots = playerInv.getBoots();
 
-            if ((helmet != null && !helmet.equals(oldHelmet)) && (chestplate != null && !chestplate.equals(oldChestplate)) && (leggings != null && !leggings.equals(oldLeggings)) && (boots != null && !boots.equals(oldBoots)))
+            if ((helmet != null && helmet.equals(oldHelmet)) && (chestplate != null && chestplate.equals(oldChestplate)) && (leggings != null && leggings.equals(oldLeggings)) && (boots != null && boots.equals(oldBoots)))
                 return;
 
             double maxHealth = 20.0F;
@@ -98,7 +98,7 @@ public class LifeBonusHandler implements Listener {
                 maxHealth += 5.0F;
 
             double prevMaxHealth = player.getAttribute(Attribute.GENERIC_MAX_HEALTH).getBaseValue();
-            if(prevMaxHealth == maxHealth)
+            if (prevMaxHealth == maxHealth)
                 return;
 
             MaxHealthChangeEvent e = new MaxHealthChangeEvent(player, prevMaxHealth, maxHealth);

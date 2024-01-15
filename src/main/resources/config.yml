@@ -1,2 +1,21 @@
+#Multiminer Upgrade
+#The amount of blocks a player can mine at once
 multiMinerMaxBlocks: 64
+
+#Teleportation Upgrade
+#The teleportation range of swords
 teleportationRange: 10
+
+#softFall Upgrade
+#Determines whether blocks like grass or stone should be replaced when hitting the ground too hard
+softFallBlockReplacement: false
+
+#Celestial Upgrade
+#Determines whether the player should lose xp while flying
+celestialDrainXP: true
+
+#The amount of xp drained from the player per block when flying
+celestialXPToDrain: 0.5
+
+#Determines whether the player should take fall damage while wearing celestial armor
+celestialFallDamage: true

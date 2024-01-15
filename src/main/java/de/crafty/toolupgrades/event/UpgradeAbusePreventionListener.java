@@ -10,6 +10,7 @@ import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryDragEvent;
 import org.bukkit.event.inventory.InventoryMoveItemEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
+import org.bukkit.inventory.AnvilInventory;
 import org.bukkit.inventory.CraftingInventory;
 import org.bukkit.inventory.PlayerInventory;
 import org.bukkit.inventory.SmithingInventory;
@@ -20,7 +21,7 @@ public class UpgradeAbusePreventionListener implements Listener {
     @EventHandler
     public void onItemClick$0(InventoryClickEvent event) {
 
-        if (event.getInventory() instanceof SmithingInventory || event.getInventory() instanceof CraftingInventory || event.getWhoClicked().getGameMode() == GameMode.CREATIVE)
+        if (event.getInventory() instanceof AnvilInventory || event.getInventory() instanceof CraftingInventory || event.getWhoClicked().getGameMode() == GameMode.CREATIVE)
             return;
 
         if (UpgradeItem.getByStack(event.getCurrentItem()) != null)
@@ -40,7 +41,7 @@ public class UpgradeAbusePreventionListener implements Listener {
         if(UpgradeItem.getByStack(event.getItem()) == null)
             return;
 
-        if(event.getClickedBlock() != null && (event.getClickedBlock().getType() == Material.CRAFTING_TABLE || event.getClickedBlock().getType() == Material.SMITHING_TABLE))
+        if(event.getClickedBlock() != null && (event.getClickedBlock().getType() == Material.CRAFTING_TABLE || event.getClickedBlock().getType() == Material.ANVIL))
             return;
 
         event.setCancelled(true);

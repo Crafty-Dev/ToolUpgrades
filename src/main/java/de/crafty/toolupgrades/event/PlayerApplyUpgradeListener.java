@@ -6,84 +6,96 @@ import de.crafty.toolupgrades.util.ToolManager;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.Sound;
-import org.bukkit.craftbukkit.v1_19_R2.entity.CraftPlayer;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
+import org.bukkit.event.inventory.ClickType;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryType;
 import org.bukkit.event.inventory.PrepareAnvilEvent;
-import org.bukkit.event.inventory.PrepareSmithingEvent;
 import org.bukkit.inventory.AnvilInventory;
+import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.inventory.SmithingInventory;
-
-import javax.swing.*;
 
 public class PlayerApplyUpgradeListener implements Listener {
 
 
     @EventHandler
-    public void onApply$0(PrepareSmithingEvent event) {
+    public void onApplyUpgrade$0(PrepareAnvilEvent event) {
 
-        SmithingInventory inv = event.getInventory();
+        AnvilInventory inv = event.getInventory();
 
-        ItemStack stack = inv.getItem(0);
-        ItemStack upgradeStack = inv.getItem(1);
+        ItemStack input_0 = inv.getItem(0);
+        ItemStack input_1 = inv.getItem(1);
 
-        if (stack == null || upgradeStack == null)
+        UpgradeItem upgradeItem = UpgradeItem.getByStack(input_1);
+        if (upgradeItem == null || !ToolManager.canApplyTo(input_0, upgradeItem.getUpgrade()))
             return;
 
+        ItemStack result = input_0.clone();
+        result.setAmount(1);
 
-        UpgradeItem upgradeItem = UpgradeItem.getByStack(upgradeStack);
-        if (upgradeItem == null)
-            return;
-
-
-        if (!ToolManager.canApplyTo(stack, upgradeItem.getUpgrade()))
-            return;
-
-        event.setResult(ToolManager.applyUpgrade(stack.clone(), upgradeItem.getUpgrade()));
+        event.setResult(ToolManager.applyUpgrade(result, upgradeItem.getUpgrade()));
 
     }
 
 
     @EventHandler
-    public void onApply$1(InventoryClickEvent event) {
+    public void onApplyUpgrade$1(InventoryClickEvent event) {
+
+        if (!(event.getInventory() instanceof AnvilInventory inv))
+            return;
 
         Player player = (Player) event.getWhoClicked();
 
-        if (!(event.getSlotType() == InventoryType.SlotType.RESULT && event.getView().getTopInventory() instanceof SmithingInventory inv))
+        ItemStack input_0 = inv.getItem(0);
+        ItemStack input_1 = inv.getItem(1);
+        ItemStack result = inv.getItem(2);
+
+        if (event.getSlotType() != InventoryType.SlotType.RESULT)
             return;
 
-        if (UpgradeItem.getByStack(inv.getItem(1)) == null || inv.getResult() == null || inv.getResult().getType() == Material.AIR)
+        UpgradeItem upgradeItem = UpgradeItem.getByStack(input_1);
+        if (input_0 == null || upgradeItem == null || result == null)
             return;
 
+        if (event.getClick() == ClickType.SHIFT_LEFT || event.getClick() == ClickType.SHIFT_RIGHT) {
 
-        if (event.isShiftClick()) {
-            if(player.getInventory().addItem(inv.getResult()).size() != 0)
-                return;
+            if (player.getInventory().addItem(result).size() == 0) {
+                this.onSuccessfullUpgrade(input_0, input_1, player, inv);
+            }
+
+            return;
         }
 
-        if(!event.isShiftClick() && player.getItemOnCursor().getType() != Material.AIR)
-            return;
+        if (event.getClick() == ClickType.LEFT || event.getClick() == ClickType.RIGHT) {
 
+            ItemStack cursor = player.getItemOnCursor();
 
-        if(!event.isShiftClick())
-            player.setItemOnCursor(inv.getResult());
+            if (cursor.getType() == Material.AIR)
+                player.setItemOnCursor(result);
+            else if (!cursor.isSimilar(result))
+                return;
+            else if (cursor.getAmount() >= cursor.getMaxStackSize())
+                return;
 
-        if (inv.getItem(0).getAmount() > 1)
-            inv.getItem(0).setAmount(inv.getItem(0).getAmount() - 1);
-        else
-            inv.setItem(0, null);
+            cursor.setAmount(cursor.getAmount() + 1);
+            this.onSuccessfullUpgrade(input_0, input_1, player, inv);
 
+        }
 
-        if (inv.getItem(1).getAmount() > 1)
-            inv.getItem(1).setAmount(inv.getItem(1).getAmount() - 1);
-        else
-            inv.setItem(1, null);
-
-        inv.setResult(null);
-        player.playSound(player.getLocation(), Sound.BLOCK_SMITHING_TABLE_USE, 1.0F, 1.0F);
     }
+
+    private void onSuccessfullUpgrade(ItemStack input_0, ItemStack input_1, Player player, Inventory inv){
+        inv.setItem(2, null);
+        input_0.setAmount(input_0.getAmount() - 1);
+        input_1.setAmount(input_1.getAmount() - 1);
+
+
+        player.playSound(player.getLocation(), Sound.BLOCK_ANVIL_USE, 1.0F, 1.0F);
+
+        //Update Inventory for PrepareAnvilEvent
+        Bukkit.getScheduler().scheduleSyncDelayedTask(ToolUpgrades.getInstance(), () -> inv.setItem(1, input_1));
+    }
+
 }

@@ -17,8 +17,8 @@ import net.minecraft.world.item.ItemToolMaterial;
 import org.bukkit.*;
 import org.bukkit.block.Block;
 import org.bukkit.block.CreatureSpawner;
-import org.bukkit.craftbukkit.v1_19_R2.entity.CraftEntity;
-import org.bukkit.craftbukkit.v1_19_R2.inventory.CraftItemStack;
+import org.bukkit.craftbukkit.v1_20_R1.entity.CraftEntity;
+import org.bukkit.craftbukkit.v1_20_R1.inventory.CraftItemStack;
 import org.bukkit.entity.*;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -53,7 +53,7 @@ public class MobCaptureHandler implements Listener {
         if (!player.isSneaking() || !ToolManager.hasUpgrade(usedStack, ToolUpgrade.MOB_CAPTURE))
             return;
 
-        if (CraftItemStack.asNMSCopy(usedStack).c() instanceof ItemProjectileWeapon)
+        if (CraftItemStack.asNMSCopy(usedStack).d() instanceof ItemProjectileWeapon)
             return;
 
         if (usedStack.getItemMeta().getPersistentDataContainer().has(new NamespacedKey(ToolUpgrades.getInstance(), "capturedMob"), PersistentDataType.STRING))
@@ -79,6 +79,11 @@ public class MobCaptureHandler implements Listener {
 
 
         int requiredDurability = this.getRequiredDurability(entity);
+
+        if (requiredDurability < 0) {
+            player.spigot().sendMessage(ChatMessageType.ACTION_BAR, new TextComponent("\u00a75This creature seems way to mighty"));
+            return;
+        }
 
         MobCaptureEvent e = new MobCaptureEvent(player, entity);
         Bukkit.getPluginManager().callEvent(e);
@@ -122,7 +127,7 @@ public class MobCaptureHandler implements Listener {
             return;
         }
 
-        if (CraftItemStack.asNMSCopy(usedStack).c() instanceof ItemProjectileWeapon)
+        if (CraftItemStack.asNMSCopy(usedStack).d() instanceof ItemProjectileWeapon)
             return;
 
         if (event.getAction() != Action.RIGHT_CLICK_AIR && event.getAction() != Action.RIGHT_CLICK_BLOCK)
@@ -205,7 +210,7 @@ public class MobCaptureHandler implements Listener {
             return;
 
 
-        Bukkit.getScheduler().scheduleSyncDelayedTask(ToolUpgrades.getInstance(), () -> {
+        ToolUpgrades.runPostEventTask(() -> {
             event.getProjectile().getPersistentDataContainer().set(new NamespacedKey(ToolUpgrades.getInstance(), "capturer"), PersistentDataType.STRING, player.getUniqueId().toString());
             event.getProjectile().getPersistentDataContainer().set(new NamespacedKey(ToolUpgrades.getInstance(), "capturerHashCode"), PersistentDataType.INTEGER, usedStack.hashCode());
         });
@@ -247,6 +252,10 @@ public class MobCaptureHandler implements Listener {
             event.getEntity().remove();
 
             int requiredDurability = this.getRequiredDurability(entity);
+            if (requiredDurability < 0) {
+                player.spigot().sendMessage(ChatMessageType.ACTION_BAR, new TextComponent("\u00a75This creature seems way to mighty"));
+                return;
+            }
 
             Damageable meta = (Damageable) holdStack.getItemMeta();
             if (meta.getDamage() > holdStack.getType().getMaxDurability() - requiredDurability) {
@@ -383,10 +392,10 @@ public class MobCaptureHandler implements Listener {
 
     private int getToolLevel(ItemStack stack) {
 
-        if (!(CraftItemStack.asNMSCopy(stack).c() instanceof ItemToolMaterial toolMaterial))
+        if (!(CraftItemStack.asNMSCopy(stack).d() instanceof ItemToolMaterial toolMaterial))
             return -1;
 
-        return toolMaterial.j().d();
+        return toolMaterial.i().d();
 
     }
 
@@ -414,10 +423,10 @@ public class MobCaptureHandler implements Listener {
 
         SpawnCategory category = entity.getSpawnCategory();
 
-        if (entity.getType() == EntityType.ENDER_DRAGON)
-            return 540;
+        if (entity.getType() == EntityType.ENDER_DRAGON || entity.getType() == EntityType.WARDEN)
+            return -1;
         else if (entity.getType() == EntityType.WITHER)
-            return 270;
+            return 540;
         else if (entity.getType() == EntityType.GUARDIAN)
             return 135;
         else if (category == SpawnCategory.MONSTER || category == SpawnCategory.WATER_UNDERGROUND_CREATURE)

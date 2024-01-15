@@ -7,12 +7,15 @@ public enum ToolUpgrade {
     AUTO_SMELTING(Type.TOOL, "\u00a74Auto Smelting"),
     MULTI_MINER(Type.TOOL, "\u00a78Multi Miner"),
     TELEPORTATION(Type.WEAPON, "\u00a73Teleportation"),
-    FADELESS(Type.ALL, "\u00a76Fadeless"),
+    FADELESS(Type.ALL_GEAR, "\u00a76Fadeless"),
     SOFT_FALL(Type.BOOTS, "\u00a7FSoft Fall"),
     ENDER_MASK(Type.HELMET, "\u00a71Ender Mask"),
     MOB_CAPTURE(Type.TOOL_AND_WEAPON, "\u00a75Mob Capture"),
     SILKY(Type.TOOL, "\u00a7FSilky"),
-    LIFE_BONUS(Type.ARMOR, "\u00a7cLife Bonus");
+    LIFE_BONUS(Type.ARMOR, "\u00a7cLife Bonus"),
+    ENCHANTMENT_RELOCATION(Type.BOOK, "\u00a79\u00a7oEnchantment Relocation"),
+    CELESTIAL(Type.ARMOR, "\u00a76\u00a7oCelestial")
+    ;
 
 
     final Type type;
@@ -32,15 +35,27 @@ public enum ToolUpgrade {
 
     public enum Type {
 
-        ALL,
-        HELMET,
-        CHESTPLATE,
-        LEGGINGS,
-        BOOTS,
-        TOOL,
-        WEAPON,
-        ARMOR,
-        TOOL_AND_WEAPON
+        ALL_GEAR ("All Gear"),
+        HELMET ("Helmet"),
+        CHESTPLATE ("Chestplate"),
+        LEGGINGS ("Leggings"),
+        BOOTS ("Boots"),
+        TOOL ("Tools"),
+        WEAPON ("Weapons"),
+        ARMOR ("Armor"),
+        TOOL_AND_WEAPON ("Tools & Weapons"),
+        BOOK ("Books");
+
+
+        final String displayName;
+
+        Type(String displayName){
+            this.displayName = displayName;
+        }
+
+        public String displayName() {
+            return this.displayName;
+        }
     }
 
 }
