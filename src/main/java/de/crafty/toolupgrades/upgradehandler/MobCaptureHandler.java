@@ -17,8 +17,8 @@ import net.minecraft.world.item.ItemToolMaterial;
 import org.bukkit.*;
 import org.bukkit.block.Block;
 import org.bukkit.block.CreatureSpawner;
-import org.bukkit.craftbukkit.v1_19_R2.entity.CraftEntity;
-import org.bukkit.craftbukkit.v1_19_R2.inventory.CraftItemStack;
+import org.bukkit.craftbukkit.v1_19_R1.entity.CraftEntity;
+import org.bukkit.craftbukkit.v1_19_R1.inventory.CraftItemStack;
 import org.bukkit.entity.*;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -79,6 +79,11 @@ public class MobCaptureHandler implements Listener {
 
 
         int requiredDurability = this.getRequiredDurability(entity);
+
+        if (requiredDurability < 0) {
+            player.spigot().sendMessage(ChatMessageType.ACTION_BAR, new TextComponent("\u00a75This creature seems way to mighty"));
+            return;
+        }
 
         MobCaptureEvent e = new MobCaptureEvent(player, entity);
         Bukkit.getPluginManager().callEvent(e);
@@ -247,6 +252,10 @@ public class MobCaptureHandler implements Listener {
             event.getEntity().remove();
 
             int requiredDurability = this.getRequiredDurability(entity);
+            if(requiredDurability < 0){
+                player.spigot().sendMessage(ChatMessageType.ACTION_BAR, new TextComponent("\u00a75This creature seems way to mighty"));
+                return;
+            }
 
             Damageable meta = (Damageable) holdStack.getItemMeta();
             if (meta.getDamage() > holdStack.getType().getMaxDurability() - requiredDurability) {
@@ -414,10 +423,10 @@ public class MobCaptureHandler implements Listener {
 
         SpawnCategory category = entity.getSpawnCategory();
 
-        if (entity.getType() == EntityType.ENDER_DRAGON)
-            return 540;
+        if (entity.getType() == EntityType.ENDER_DRAGON || entity.getType() == EntityType.WARDEN)
+            return -1;
         else if (entity.getType() == EntityType.WITHER)
-            return 270;
+            return 540;
         else if (entity.getType() == EntityType.GUARDIAN)
             return 135;
         else if (category == SpawnCategory.MONSTER || category == SpawnCategory.WATER_UNDERGROUND_CREATURE)

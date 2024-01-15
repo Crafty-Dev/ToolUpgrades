@@ -1,24 +1,17 @@
 package de.crafty.toolupgrades.event;
 
-import de.crafty.toolupgrades.ToolUpgrades;
 import de.crafty.toolupgrades.upgrade.UpgradeItem;
 import de.crafty.toolupgrades.util.ToolManager;
-import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.Sound;
-import org.bukkit.craftbukkit.v1_19_R2.entity.CraftPlayer;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryType;
-import org.bukkit.event.inventory.PrepareAnvilEvent;
 import org.bukkit.event.inventory.PrepareSmithingEvent;
-import org.bukkit.inventory.AnvilInventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.SmithingInventory;
-
-import javax.swing.*;
 
 public class PlayerApplyUpgradeListener implements Listener {
 

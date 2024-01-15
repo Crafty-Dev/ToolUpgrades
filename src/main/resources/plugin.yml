@@ -23,5 +23,5 @@ commands:
     description: Gives an Upgrade Item to a Player
 
   upgradeRecipe:
-    usage: /upgradeRecipe <id>
+    usage: /upgradeRecipe <show|create|delete|reset>
     description: Shows a recipe of an upgrade item

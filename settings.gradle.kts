@@ -1,2 +1,2 @@
-rootProject.name = "ToolUpgrades"
+rootProject.name = "ToolUpgrades-1.19+"
 
