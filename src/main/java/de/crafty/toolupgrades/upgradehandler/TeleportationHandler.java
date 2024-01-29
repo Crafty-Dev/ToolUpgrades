@@ -5,7 +5,7 @@ import de.crafty.toolupgrades.upgrade.ToolUpgrade;
 import de.crafty.toolupgrades.util.ToolManager;
 import net.minecraft.world.item.ItemSword;
 import org.bukkit.*;
-import org.bukkit.craftbukkit.v1_20_R1.inventory.CraftItemStack;
+import org.bukkit.craftbukkit.v1_20_R2.inventory.CraftItemStack;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
