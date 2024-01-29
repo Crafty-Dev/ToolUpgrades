@@ -21,7 +21,7 @@ public class UpgradeAbusePreventionListener implements Listener {
     @EventHandler
     public void onItemClick$0(InventoryClickEvent event) {
 
-        if (event.getInventory() instanceof AnvilInventory || event.getInventory() instanceof CraftingInventory || event.getWhoClicked().getGameMode() == GameMode.CREATIVE)
+        if (!(event.getInventory() instanceof CraftingInventory) || event.getWhoClicked().getGameMode() == GameMode.CREATIVE)
             return;
 
         if (UpgradeItem.getByStack(event.getCurrentItem()) != null)
