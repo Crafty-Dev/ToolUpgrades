@@ -140,7 +140,8 @@ public class CelestialHandler implements Listener {
                 player.spigot().sendMessage(ChatMessageType.ACTION_BAR, new TextComponent("\u00a77Celestial Pieces: " + color + pieces + "\u00a77/\u00a764"));
             }
 
-            player.setAllowFlight(ToolManager.getCelestialPieces(player) == 4);
+            if(player.getGameMode() != GameMode.CREATIVE && player.getGameMode() != GameMode.SPECTATOR)
+                player.setAllowFlight(ToolManager.getCelestialPieces(player) == 4);
         });
 
     }
