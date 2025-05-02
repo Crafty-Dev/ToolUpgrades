@@ -17,7 +17,7 @@ public class UpgradeAbusePreventionListener implements Listener {
     @EventHandler
     public void onItemDrag$0(InventoryDragEvent event) {
 
-        if (event.getInventory().getType() == InventoryType.CHEST || event.getInventory().getType() == InventoryType.ENDER_CHEST)
+        if (event.getInventory().getType() == InventoryType.CHEST || event.getInventory().getType() == InventoryType.ENDER_CHEST || event.getInventory().getType() == InventoryType.ANVIL)
             return;
         if (UpgradeItem.getByStack(event.getNewItems().values().stream().findFirst().orElse(null)) == null)
             return;
@@ -40,7 +40,7 @@ public class UpgradeAbusePreventionListener implements Listener {
 
         Inventory clicked = event.getClickedInventory();
 
-        if (event.getInventory().getType() == InventoryType.CHEST || event.getInventory().getType() == InventoryType.ENDER_CHEST)
+        if (event.getInventory().getType() == InventoryType.CHEST || event.getInventory().getType() == InventoryType.ENDER_CHEST || event.getInventory().getType() == InventoryType.ANVIL)
             return;
 
         if (event.getAction() != InventoryAction.MOVE_TO_OTHER_INVENTORY && !event.getAction().toString().startsWith("PLACE"))
