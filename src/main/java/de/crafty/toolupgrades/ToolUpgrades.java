@@ -15,9 +15,6 @@ public class ToolUpgrades extends JavaPlugin {
     public static final String PREFIX = "\u00a77[\u00a75ToolUpgrades\u00a77] ";
 
 
-    //TODO Make Celestial consume xp
-    //TODO Enable falldamage for celestial
-
     private static ToolUpgrades instance;
 
     @Override

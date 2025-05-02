@@ -97,7 +97,7 @@ public class LifeBonusHandler implements Listener {
             if (ToolManager.hasUpgrade(boots, ToolUpgrade.LIFE_BONUS))
                 maxHealth += 5.0F;
 
-            double prevMaxHealth = player.getAttribute(Attribute.GENERIC_MAX_HEALTH).getBaseValue();
+            double prevMaxHealth = player.getAttribute(Attribute.MAX_HEALTH).getBaseValue();
             if (prevMaxHealth == maxHealth)
                 return;
 
@@ -109,7 +109,7 @@ public class LifeBonusHandler implements Listener {
             if (player.getHealth() > maxHealth)
                 player.setHealth(maxHealth);
 
-            player.getAttribute(Attribute.GENERIC_MAX_HEALTH).setBaseValue(maxHealth);
+            player.getAttribute(Attribute.MAX_HEALTH).setBaseValue(maxHealth);
 
             World world = player.getWorld();
             BoundingBox box = player.getBoundingBox();
@@ -124,7 +124,7 @@ public class LifeBonusHandler implements Listener {
                     for (int y = 0; y < yPoints; y++) {
                         for (int z = 0; z < zPoints; z++) {
 
-                            world.spawnParticle(Particle.REDSTONE, new Location(world, box.getMinX() + (x * (box.getWidthX() / (xPoints - 1.0F))), box.getMinY() + (y * (box.getHeight() / (yPoints - 1.0F))), box.getMinZ() + (z * (box.getWidthZ() / (zPoints - 1.0F)))), 100, 0, 0, 0, new Particle.DustOptions(Color.fromRGB(255, 0, 0), 0.5F));
+                            world.spawnParticle(Particle.DUST, new Location(world, box.getMinX() + (x * (box.getWidthX() / (xPoints - 1.0F))), box.getMinY() + (y * (box.getHeight() / (yPoints - 1.0F))), box.getMinZ() + (z * (box.getWidthZ() / (zPoints - 1.0F)))), 100, 0, 0, 0, new Particle.DustOptions(Color.fromRGB(255, 0, 0), 0.5F));
 
 
                         }

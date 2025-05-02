@@ -45,7 +45,7 @@ public class UpgradeItem {
         meta.setLore(Arrays.asList(lore));
 
         if (enchantmentGlint) {
-            meta.addEnchant(Enchantment.DURABILITY, 0, true);
+            meta.addEnchant(Enchantment.UNBREAKING, 0, true);
             meta.addItemFlags(ItemFlag.HIDE_ENCHANTS);
         }
 

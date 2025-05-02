@@ -2,11 +2,11 @@ package de.crafty.toolupgrades.util;
 
 import de.crafty.toolupgrades.ToolUpgrades;
 import de.crafty.toolupgrades.upgrade.ToolUpgrade;
-import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.world.entity.EnumItemSlot;
+import net.minecraft.core.component.DataComponents;
+import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.item.*;
 import org.bukkit.NamespacedKey;
-import org.bukkit.craftbukkit.v1_20_R3.inventory.CraftItemStack;
+import org.bukkit.craftbukkit.inventory.CraftItemStack;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
@@ -19,6 +19,41 @@ import java.util.List;
 
 public class ToolManager {
 
+    private static final List<Item> HELMETS = List.of(
+            Items.LEATHER_HELMET,
+            Items.CHAINMAIL_HELMET,
+            Items.IRON_HELMET,
+            Items.GOLDEN_HELMET,
+            Items.DIAMOND_HELMET,
+            Items.NETHERITE_HELMET
+    );
+
+    private static final List<Item> CHESTPLATE = List.of(
+            Items.LEATHER_CHESTPLATE,
+            Items.CHAINMAIL_CHESTPLATE,
+            Items.IRON_CHESTPLATE,
+            Items.GOLDEN_CHESTPLATE,
+            Items.DIAMOND_CHESTPLATE,
+            Items.NETHERITE_CHESTPLATE
+    );
+
+    private static final List<Item> LEGGINGS = List.of(
+            Items.LEATHER_LEGGINGS,
+            Items.CHAINMAIL_LEGGINGS,
+            Items.IRON_LEGGINGS,
+            Items.GOLDEN_LEGGINGS,
+            Items.DIAMOND_LEGGINGS,
+            Items.NETHERITE_LEGGINGS
+    );
+
+    private static final List<Item> BOOTS = List.of(
+            Items.LEATHER_BOOTS,
+            Items.CHAINMAIL_BOOTS,
+            Items.IRON_BOOTS,
+            Items.GOLDEN_BOOTS,
+            Items.DIAMOND_BOOTS,
+            Items.NETHERITE_BOOTS
+    );
 
     public static ItemStack applyUpgrade(ItemStack stack, ToolUpgrade upgrade) {
         if (ToolManager.hasUpgrade(stack, upgrade) || stack.getItemMeta() == null)
@@ -27,7 +62,7 @@ public class ToolManager {
 
         List<String> additionalLore = new ArrayList<>();
 
-        if (ToolManager.getUpgrades(stack).size() == 0)
+        if (ToolManager.getUpgrades(stack).isEmpty())
             additionalLore.addAll(Arrays.asList("   ", "\u00a76\u00a7lUpgrades: "));
 
 
@@ -77,35 +112,35 @@ public class ToolManager {
 
     private static boolean canApplyTo(ItemStack stack, ToolUpgrade.Type type) {
 
-        if (type == ToolUpgrade.Type.ALL_GEAR && (CraftItemStack.asNMSCopy(stack).d() instanceof ItemToolMaterial || CraftItemStack.asNMSCopy(stack).d() instanceof ItemArmor || CraftItemStack.asNMSCopy(stack).d() instanceof ItemProjectileWeapon))
+        if (type == ToolUpgrade.Type.ALL_GEAR && (CraftItemStack.asNMSCopy(stack).has(DataComponents.TOOL) || CraftItemStack.asNMSCopy(stack).getItem() instanceof ArmorItem || CraftItemStack.asNMSCopy(stack).getItem() instanceof ProjectileWeaponItem))
             return true;
 
-        if (type == ToolUpgrade.Type.BOOK && (CraftItemStack.asNMSCopy(stack).d() instanceof ItemBook || CraftItemStack.asNMSCopy(stack).d() instanceof ItemEnchantedBook))
+        if (type == ToolUpgrade.Type.BOOK && (CraftItemStack.asNMSCopy(stack).getItem() == Items.BOOK || CraftItemStack.asNMSCopy(stack).getItem() == Items.BOOK))
             return true;
 
-        if (CraftItemStack.asNMSCopy(stack).d() instanceof ItemArmor armor) {
+        if (CraftItemStack.asNMSCopy(stack).getItem() instanceof ArmorItem armor) {
 
-            if (armor.b().a() == EnumItemSlot.c && type == ToolUpgrade.Type.BOOTS)
+            if (BOOTS.contains(armor) && type == ToolUpgrade.Type.BOOTS)
                 return true;
-            if (armor.b().a() == EnumItemSlot.d && type == ToolUpgrade.Type.LEGGINGS)
+            if (LEGGINGS.contains(armor) && type == ToolUpgrade.Type.LEGGINGS)
                 return true;
-            if (armor.b().a() == EnumItemSlot.e && type == ToolUpgrade.Type.CHESTPLATE)
+            if (CHESTPLATE.contains(armor) && type == ToolUpgrade.Type.CHESTPLATE)
                 return true;
-            if (armor.b().a() == EnumItemSlot.f && type == ToolUpgrade.Type.HELMET)
+            if (HELMETS.contains(armor) && type == ToolUpgrade.Type.HELMET)
                 return true;
 
         }
 
-        if (CraftItemStack.asNMSCopy(stack).d() instanceof ItemToolMaterial && type == ToolUpgrade.Type.TOOL_AND_WEAPON)
+        if (CraftItemStack.asNMSCopy(stack).has(DataComponents.TOOL) && type == ToolUpgrade.Type.TOOL_AND_WEAPON)
             return true;
 
-        if (CraftItemStack.asNMSCopy(stack).d() instanceof ItemTool && type == ToolUpgrade.Type.TOOL)
+        if (CraftItemStack.asNMSCopy(stack).has(DataComponents.TOOL) && type == ToolUpgrade.Type.TOOL)
             return true;
 
-        if ((CraftItemStack.asNMSCopy(stack).d() instanceof ItemSword || CraftItemStack.asNMSCopy(stack).d() instanceof ItemProjectileWeapon) && (type == ToolUpgrade.Type.WEAPON || type == ToolUpgrade.Type.TOOL_AND_WEAPON))
+        if ((CraftItemStack.asNMSCopy(stack).getItem() instanceof SwordItem || CraftItemStack.asNMSCopy(stack).getItem() instanceof ProjectileWeaponItem) && (type == ToolUpgrade.Type.WEAPON || type == ToolUpgrade.Type.TOOL_AND_WEAPON))
             return true;
 
-        return CraftItemStack.asNMSCopy(stack).d() instanceof Equipable && type == ToolUpgrade.Type.ARMOR;
+        return CraftItemStack.asNMSCopy(stack).getItem() instanceof ArmorItem && type == ToolUpgrade.Type.ARMOR;
     }
 
     public static List<ToolUpgrade> getUpgrades(ItemStack stack) {
@@ -135,7 +170,7 @@ public class ToolManager {
 
     //---------------------Mob Capture---------------------
 
-    public static void addCapturedMobData(ItemStack stack, EntityType entityType, NBTTagCompound tag) {
+    public static void addCapturedMobData(ItemStack stack, EntityType entityType, CompoundTag tag) {
 
         ItemMeta meta = stack.getItemMeta();
         List<String> lore = meta.getLore();

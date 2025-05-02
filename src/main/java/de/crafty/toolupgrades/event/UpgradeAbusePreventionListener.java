@@ -3,7 +3,7 @@ package de.crafty.toolupgrades.event;
 import de.crafty.toolupgrades.upgrade.UpgradeItem;
 import org.bukkit.GameMode;
 import org.bukkit.Material;
-import org.bukkit.craftbukkit.v1_20_R3.inventory.CraftInventoryCrafting;
+import org.bukkit.craftbukkit.inventory.CraftInventoryCrafting;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
@@ -17,7 +17,7 @@ public class UpgradeAbusePreventionListener implements Listener {
     @EventHandler
     public void onItemDrag$0(InventoryDragEvent event) {
 
-        if (event.getInventory().getType() == InventoryType.CHEST || event.getInventory().getType() == InventoryType.ENDER_CHEST)
+        if (event.getInventory().getType() == InventoryType.CHEST || event.getInventory().getType() == InventoryType.ENDER_CHEST || event.getInventory().getType() == InventoryType.ANVIL)
             return;
         if (UpgradeItem.getByStack(event.getNewItems().values().stream().findFirst().orElse(null)) == null)
             return;
@@ -40,7 +40,7 @@ public class UpgradeAbusePreventionListener implements Listener {
 
         Inventory clicked = event.getClickedInventory();
 
-        if (event.getInventory().getType() == InventoryType.CHEST || event.getInventory().getType() == InventoryType.ENDER_CHEST)
+        if (event.getInventory().getType() == InventoryType.CHEST || event.getInventory().getType() == InventoryType.ENDER_CHEST || event.getInventory().getType() == InventoryType.ANVIL)
             return;
 
         if (event.getAction() != InventoryAction.MOVE_TO_OTHER_INVENTORY && !event.getAction().toString().startsWith("PLACE"))

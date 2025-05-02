@@ -8,17 +8,17 @@ import de.crafty.toolupgrades.upgrade.ToolUpgrade;
 import de.crafty.toolupgrades.util.ToolManager;
 import net.md_5.bungee.api.ChatMessageType;
 import net.md_5.bungee.api.chat.TextComponent;
-import net.minecraft.nbt.MojangsonParser;
-import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.nbt.NBTTagDouble;
-import net.minecraft.nbt.NBTTagList;
-import net.minecraft.world.item.ItemProjectileWeapon;
-import net.minecraft.world.item.ItemToolMaterial;
+import net.minecraft.core.component.DataComponents;
+import net.minecraft.nbt.*;
+import net.minecraft.tags.ItemTags;
+import net.minecraft.tags.TagKey;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ProjectileWeaponItem;
 import org.bukkit.*;
 import org.bukkit.block.Block;
 import org.bukkit.block.CreatureSpawner;
-import org.bukkit.craftbukkit.v1_20_R3.entity.CraftEntity;
-import org.bukkit.craftbukkit.v1_20_R3.inventory.CraftItemStack;
+import org.bukkit.craftbukkit.entity.CraftEntity;
+import org.bukkit.craftbukkit.inventory.CraftItemStack;
 import org.bukkit.entity.*;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -38,6 +38,15 @@ import java.util.UUID;
 
 public class MobCaptureHandler implements Listener {
 
+    private static final List<TagKey<Item>> TOOL_TAGS = List.of(
+            ItemTags.WOODEN_TOOL_MATERIALS,
+            ItemTags.STONE_TOOL_MATERIALS,
+            ItemTags.IRON_TOOL_MATERIALS,
+            ItemTags.GOLD_TOOL_MATERIALS,
+            ItemTags.DIAMOND_TOOL_MATERIALS,
+            ItemTags.NETHERITE_TOOL_MATERIALS
+    );
+
 
     private final List<ItemStack> lockedItems = new ArrayList<>();
 
@@ -53,7 +62,7 @@ public class MobCaptureHandler implements Listener {
         if (!player.isSneaking() || !ToolManager.hasUpgrade(usedStack, ToolUpgrade.MOB_CAPTURE))
             return;
 
-        if (CraftItemStack.asNMSCopy(usedStack).d() instanceof ItemProjectileWeapon)
+        if (CraftItemStack.asNMSCopy(usedStack).getItem() instanceof ProjectileWeaponItem)
             return;
 
         if (usedStack.getItemMeta().getPersistentDataContainer().has(new NamespacedKey(ToolUpgrades.getInstance(), "capturedMob"), PersistentDataType.STRING))
@@ -105,7 +114,7 @@ public class MobCaptureHandler implements Listener {
 
         entity.remove();
         player.playSound(player.getLocation(), Sound.ENTITY_ENDER_EYE_DEATH, 1.0F, 0.5F);
-        ToolManager.addCapturedMobData(usedStack, entity.getType(), ((CraftEntity) entity).getHandle().f(new NBTTagCompound()));
+        ToolManager.addCapturedMobData(usedStack, entity.getType(), ((CraftEntity) entity).getHandle().saveWithoutId(new CompoundTag()));
 
         this.spawnParticles(entity.getLocation(), entity, Color.fromRGB(76, 76, 76));
         this.lockedItems.add(usedStack);
@@ -127,7 +136,7 @@ public class MobCaptureHandler implements Listener {
             return;
         }
 
-        if (CraftItemStack.asNMSCopy(usedStack).d() instanceof ItemProjectileWeapon)
+        if (CraftItemStack.asNMSCopy(usedStack).getItem() instanceof ProjectileWeaponItem)
             return;
 
         if (event.getAction() != Action.RIGHT_CLICK_AIR && event.getAction() != Action.RIGHT_CLICK_BLOCK)
@@ -143,9 +152,9 @@ public class MobCaptureHandler implements Listener {
 
 
         EntityType type = EntityType.valueOf(data[0]);
-        NBTTagCompound tag = null;
+        CompoundTag tag = null;
         try {
-            tag = MojangsonParser.a(data[1]);
+            tag = TagParser.parseTag(data[1]);
         } catch (CommandSyntaxException e) {
             Bukkit.getConsoleSender().sendMessage(ToolUpgrades.PREFIX + "Failed to read NBT Data");
         }
@@ -166,13 +175,13 @@ public class MobCaptureHandler implements Listener {
 
         Entity entity = world.spawnEntity(spawnLoc, type);
 
-        NBTTagList listTag = new NBTTagList();
-        listTag.add(NBTTagDouble.a(spawnLoc.getX()));
-        listTag.add(NBTTagDouble.a(spawnLoc.getY()));
-        listTag.add(NBTTagDouble.a(spawnLoc.getZ()));
-        tag.a("Pos", listTag);
+        ListTag listTag = new ListTag();
+        listTag.add(DoubleTag.valueOf(spawnLoc.getX()));
+        listTag.add(DoubleTag.valueOf(spawnLoc.getY()));
+        listTag.add(DoubleTag.valueOf(spawnLoc.getZ()));
+        tag.put("Pos", listTag);
 
-        ((CraftEntity) entity).getHandle().g(tag);
+        ((CraftEntity) entity).getHandle().load(tag);
 
         Entity originalEntity = entity;
         MobReleaseEvent e = new MobReleaseEvent(player, entity);
@@ -270,7 +279,7 @@ public class MobCaptureHandler implements Listener {
             actualEntity.remove();
 
             player.playSound(actualEntity.getLocation(), Sound.ENTITY_ENDER_EYE_DEATH, 1.0F, 0.5F);
-            ToolManager.addCapturedMobData(holdStack, actualEntity.getType(), ((CraftEntity) actualEntity).getHandle().f(new NBTTagCompound()));
+            ToolManager.addCapturedMobData(holdStack, actualEntity.getType(), ((CraftEntity) actualEntity).getHandle().saveWithoutId(new CompoundTag()));
 
             this.spawnParticles(actualEntity.getLocation(), actualEntity, Color.fromRGB(76, 76, 76));
 
@@ -304,9 +313,9 @@ public class MobCaptureHandler implements Listener {
 
 
             EntityType type = EntityType.valueOf(data[0]);
-            NBTTagCompound tag = null;
+            CompoundTag tag = null;
             try {
-                tag = MojangsonParser.a(data[1]);
+                tag = TagParser.parseTag(data[1]);
             } catch (CommandSyntaxException e) {
                 Bukkit.getConsoleSender().sendMessage(ToolUpgrades.PREFIX + "Failed to read NBT Data");
             }
@@ -320,14 +329,14 @@ public class MobCaptureHandler implements Listener {
                 spawnLoc = event.getHitBlock().getLocation().add(event.getHitBlockFace().getDirection()).add(0.5D, 0.0D, 0.5D);
 
 
-            NBTTagList listTag = new NBTTagList();
-            listTag.add(NBTTagDouble.a(spawnLoc.getX()));
-            listTag.add(NBTTagDouble.a(spawnLoc.getY()));
-            listTag.add(NBTTagDouble.a(spawnLoc.getZ()));
-            tag.a("Pos", listTag);
+            ListTag listTag = new ListTag();
+            listTag.add(DoubleTag.valueOf(spawnLoc.getX()));
+            listTag.add(DoubleTag.valueOf(spawnLoc.getY()));
+            listTag.add(DoubleTag.valueOf(spawnLoc.getZ()));
+            tag.put("Pos", listTag);
 
             Entity entity = event.getEntity().getWorld().spawnEntity(spawnLoc, type);
-            ((CraftEntity) entity).getHandle().g(tag);
+            ((CraftEntity) entity).getHandle().load(tag);
 
 
             Entity originalEntity = entity;
@@ -380,7 +389,7 @@ public class MobCaptureHandler implements Listener {
             for (int y = 0; y <= 2; y++) {
                 for (int z = 0; z <= 2; z++) {
 
-                    world.spawnParticle(Particle.REDSTONE, new Location(world, block.getX() + (x * 0.5D), block.getY() + (y * 0.5D), block.getZ() + (z * 0.5D)), 5, 0, 0, 0, new Particle.DustOptions(Color.fromRGB(50, 180, 255), 0.75F));
+                    world.spawnParticle(Particle.DUST, new Location(world, block.getX() + (x * 0.5D), block.getY() + (y * 0.5D), block.getZ() + (z * 0.5D)), 5, 0, 0, 0, new Particle.DustOptions(Color.fromRGB(50, 180, 255), 0.75F));
 
                 }
             }
@@ -389,13 +398,20 @@ public class MobCaptureHandler implements Listener {
         ToolManager.removeCapturedMobData(usedStack);
     }
 
-
     private int getToolLevel(ItemStack stack) {
 
-        if (!(CraftItemStack.asNMSCopy(stack).d() instanceof ItemToolMaterial toolMaterial))
+        if (!(CraftItemStack.asNMSCopy(stack).has(DataComponents.TOOL)))
             return -1;
 
-        return toolMaterial.i().d();
+        return switch (CraftItemStack.asNMSCopy(stack).getMaxDamage()) {
+            case 59 -> 0;
+            case 131 -> 1;
+            case 250 -> 2;
+            case 32 -> 3;
+            case 1561 -> 4;
+            case 2031 -> 5;
+            default -> -1;
+        };
 
     }
 
@@ -414,7 +430,7 @@ public class MobCaptureHandler implements Listener {
             Vector vec = new Vector(1.0D, 0.0D, 1.0D).rotateAroundY(angle * i).normalize();
             Vector particleVec = src.toVector().add(new Vector(range, 0, range).multiply(vec));
 
-            world.spawnParticle(Particle.REDSTONE, new Location(world, particleVec.getX(), particleVec.getY(), particleVec.getZ()), 100, 0, 0, 0, new Particle.DustOptions(color, 0.5F));
+            world.spawnParticle(Particle.DUST, new Location(world, particleVec.getX(), particleVec.getY(), particleVec.getZ()), 100, 0, 0, 0, new Particle.DustOptions(color, 0.5F));
         }
 
     }

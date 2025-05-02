@@ -3,21 +3,12 @@ package de.crafty.toolupgrades.upgradehandler;
 import de.crafty.toolupgrades.ToolUpgrades;
 import de.crafty.toolupgrades.upgrade.ToolUpgrade;
 import de.crafty.toolupgrades.util.ToolManager;
-import net.minecraft.core.BlockPosition;
-import net.minecraft.network.protocol.game.PacketPlayOutBlockAction;
-import net.minecraft.network.protocol.game.PacketPlayOutBlockBreakAnimation;
-import net.minecraft.network.protocol.game.PacketPlayOutBlockChange;
 import org.bukkit.*;
 import org.bukkit.block.Block;
-import org.bukkit.craftbukkit.v1_20_R3.entity.CraftPlayer;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
-import org.bukkit.event.block.Action;
 import org.bukkit.event.entity.EntityDamageEvent;
-import org.bukkit.event.player.PlayerInteractEvent;
-import org.bukkit.event.player.PlayerMoveEvent;
-import org.bukkit.event.player.PlayerToggleFlightEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.util.Vector;
 
@@ -70,7 +61,7 @@ public class SoftFallHandler implements Listener {
 
                     particleLoc.add(new Vector(distance + finalStep * 0.25D, 0, distance + finalStep * 0.25D).multiply(rotationVec));
 
-                    world.spawnParticle(Particle.REDSTONE, particleLoc, 100, 0, 0, 0, new Particle.DustOptions(Color.fromRGB(255 - (steps * 50) + (finalStep * 50), 255 - (steps * 50) + (finalStep * 50), 255 - (steps * 50) + (finalStep * 50)), 0.3F));
+                    world.spawnParticle(Particle.DUST, particleLoc, 100, 0, 0, 0, new Particle.DustOptions(Color.fromRGB(255 - (steps * 50) + (finalStep * 50), 255 - (steps * 50) + (finalStep * 50), 255 - (steps * 50) + (finalStep * 50)), 0.3F));
                 }
 
             }, 2L * step);

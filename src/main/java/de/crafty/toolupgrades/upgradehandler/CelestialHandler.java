@@ -129,7 +129,7 @@ public class CelestialHandler implements Listener {
 
                         loc.add(new Vector(distance, 0, distance).multiply(rotationVec));
                         loc.add(0, layer * (player.getHeight() / (layers - 1)), 0);
-                        world.spawnParticle(Particle.REDSTONE, loc, 100, 0, 0, 0, new Particle.DustOptions(Color.fromRGB(255, 148, 0), 0.35F));
+                        world.spawnParticle(Particle.DUST, loc, 100, 0, 0, 0, new Particle.DustOptions(Color.fromRGB(255, 148, 0), 0.35F));
                     }
                 }
             }

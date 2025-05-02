@@ -70,7 +70,7 @@ public class SilkyHandler implements Listener {
             for (int y = 0; y <= 2; y++) {
                 for (int z = 0; z <= 2; z++) {
 
-                    world.spawnParticle(Particle.REDSTONE, new Location(world, block.getX() + (x * 0.5D), block.getY() + (y * 0.5D), block.getZ() + (z * 0.5D)), 100, 0, 0, 0, new Particle.DustOptions(Color.fromRGB(140, 0, 255), 0.75F));
+                    world.spawnParticle(Particle.DUST, new Location(world, block.getX() + (x * 0.5D), block.getY() + (y * 0.5D), block.getZ() + (z * 0.5D)), 100, 0, 0, 0, new Particle.DustOptions(Color.fromRGB(140, 0, 255), 0.75F));
 
                 }
             }
