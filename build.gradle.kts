@@ -3,7 +3,7 @@ plugins {
 }
 
 group = "de.crafty.toolupgrades"
-version = "1.2.2+1.21.4"
+version = "1.2.2+1.20.4"
 
 var output = project.properties["output"].toString()
 
