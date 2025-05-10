@@ -22,7 +22,6 @@ public class UpgradeAbusePreventionListener implements Listener {
         if (UpgradeItem.getByStack(event.getNewItems().values().stream().findFirst().orElse(null)) == null)
             return;
 
-        System.out.println("Moin");
         for (int i : event.getRawSlots()) {
 
             if (i < event.getView().getTopInventory().getSize()) {
