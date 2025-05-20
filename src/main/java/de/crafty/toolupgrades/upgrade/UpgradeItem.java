@@ -68,7 +68,7 @@ public class UpgradeItem {
             return null;
 
         for (UpgradeItem upgradeItem : ALL) {
-            if (stack.isSimilar(upgradeItem.getStack()))
+            if (upgradeItem.getStack().getType() == stack.getType() && upgradeItem.getStack().getItemMeta().getLore().equals(stack.getItemMeta().getLore()))
                 return upgradeItem;
         }
 

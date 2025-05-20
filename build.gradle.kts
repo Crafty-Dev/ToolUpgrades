@@ -1,13 +1,14 @@
 plugins {
     id("java")
     id("io.papermc.paperweight.userdev") version "2.0.0-beta.16"
+    id("xyz.jpenilla.run-paper") version "2.3.1"
 
 }
 
 group = "de.crafty.toolupgrades"
-version = "1.2.1-prod"
+version = "1.2.3+1.21.4"
 
-var output = project.properties["output"].toString()
+var buildOutput = project.properties["output"].toString()
 
 repositories {
     mavenCentral()
@@ -36,9 +37,8 @@ dependencies {
 
 tasks {
 
-    jar {
-        archiveFileName.set("ToolUpgrades-${version}.jar")
-        destinationDirectory.set(file(output))
+    runServer {
+        minecraftVersion("1.21.4")
     }
 
     processResources {
@@ -46,4 +46,13 @@ tasks {
             expand("version" to project.version)
         }
     }
+
+    reobfJar {
+        outputJar.set(file("$buildOutput/${project.name}-${version}.jar"))
+    }
+
+    assemble {
+        dependsOn(reobfJar)
+    }
+
 }
