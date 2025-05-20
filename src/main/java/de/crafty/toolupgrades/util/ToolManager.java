@@ -113,14 +113,11 @@ public class ToolManager {
 
     private static boolean canApplyTo(ItemStack stack, ToolUpgrade.Type type) {
 
-        System.out.println("1");
         if (type == ToolUpgrade.Type.ALL_GEAR && (CraftItemStack.asNMSCopy(stack).has(DataComponents.TOOL) || ToolManager.isArmor(stack) || CraftItemStack.asNMSCopy(stack).getItem() instanceof ProjectileWeaponItem))
             return true;
-        System.out.println("2");
 
         if (type == ToolUpgrade.Type.BOOK && (CraftItemStack.asNMSCopy(stack).getItem() == Items.BOOK || CraftItemStack.asNMSCopy(stack).getItem() == Items.BOOK))
             return true;
-        System.out.println("3");
 
         if (ToolManager.isArmor(stack)) {
 
@@ -134,22 +131,14 @@ public class ToolManager {
                 return true;
 
         }
-        System.out.println("4");
-
         if (CraftItemStack.asNMSCopy(stack).has(DataComponents.TOOL) && type == ToolUpgrade.Type.TOOL_AND_WEAPON)
             return true;
-
-        System.out.println("5");
 
         if (CraftItemStack.asNMSCopy(stack).has(DataComponents.TOOL) && type == ToolUpgrade.Type.TOOL)
             return true;
 
-        System.out.println("6");
-
         if ((CraftItemStack.asNMSCopy(stack).is(ItemTags.SWORDS) || CraftItemStack.asNMSCopy(stack).getItem() instanceof ProjectileWeaponItem) && (type == ToolUpgrade.Type.WEAPON || type == ToolUpgrade.Type.TOOL_AND_WEAPON))
             return true;
-
-        System.out.println("7");
 
         return ToolManager.isArmor(stack) && type == ToolUpgrade.Type.ARMOR;
     }
