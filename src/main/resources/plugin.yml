@@ -6,6 +6,7 @@ main: de.crafty.toolupgrades.ToolUpgrades
 api-version: '1.20'
 
 
+
 commands:
   applyUpgrade:
     usage: /applyUpgrade <Upgrade> (Player)

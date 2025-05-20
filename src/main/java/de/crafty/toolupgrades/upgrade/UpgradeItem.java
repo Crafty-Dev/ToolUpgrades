@@ -1,6 +1,8 @@
 package de.crafty.toolupgrades.upgrade;
 
+import net.kyori.adventure.text.Component;
 import org.bukkit.Material;
+import org.bukkit.craftbukkit.inventory.CraftItemStack;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
@@ -50,7 +52,7 @@ public class UpgradeItem {
         }
 
         List<String> upgradeLore = meta.getLore();
-        upgradeLore.add(" ");
+        upgradeLore.add("  ");
         upgradeLore.add("\u00a78Applies to: ");
         upgradeLore.add("\u00a75" + upgrade.getType().displayName());
         meta.setLore(upgradeLore);
@@ -68,7 +70,7 @@ public class UpgradeItem {
             return null;
 
         for (UpgradeItem upgradeItem : ALL) {
-            if (stack.isSimilar(upgradeItem.getStack()))
+            if (upgradeItem.getStack().getType() == stack.getType() && upgradeItem.getStack().getItemMeta().getLore().equals(stack.getItemMeta().getLore()))
                 return upgradeItem;
         }
 

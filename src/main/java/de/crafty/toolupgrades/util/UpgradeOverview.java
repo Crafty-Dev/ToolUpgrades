@@ -83,7 +83,7 @@ public class UpgradeOverview implements Listener {
 
         event.setCancelled(true);
 
-        if(event.getCurrentItem() == null)
+        if (event.getCurrentItem() == null)
             return;
 
         if (event.getClick().isRightClick()) {
@@ -91,7 +91,7 @@ public class UpgradeOverview implements Listener {
             UpgradeItem upgradeItem = UpgradeItem.getByStack(removeAdditionalInfo(event.getCurrentItem().clone()));
             if (upgradeItem != null) {
                 ItemStack stack = upgradeItem.getStack().clone();
-                if(event.isShiftClick())
+                if (event.isShiftClick())
                     stack.setAmount(stack.getMaxStackSize());
 
 
@@ -103,6 +103,7 @@ public class UpgradeOverview implements Listener {
         }
 
         if (event.getClick().isLeftClick()) {
+
             UpgradeItem upgradeItem = UpgradeItem.getByStack(removeAdditionalInfo(event.getCurrentItem().clone()));
             if (upgradeItem != null) {
                 openRecipeOverview(player, upgradeItem);
@@ -114,9 +115,9 @@ public class UpgradeOverview implements Listener {
     }
 
 
-    private static ItemStack removeAdditionalInfo(ItemStack stack){
+    private static ItemStack removeAdditionalInfo(ItemStack stack) {
 
-        if(!stack.hasItemMeta() || !stack.getItemMeta().hasLore() || stack.getItemMeta().getLore().size() < 2)
+        if (!stack.hasItemMeta() || !stack.getItemMeta().hasLore() || stack.getItemMeta().getLore().size() < 2)
             return stack;
 
         ItemMeta currentMeta = stack.getItemMeta();
@@ -182,7 +183,7 @@ public class UpgradeOverview implements Listener {
     }
 
 
-    private static HashMap<Material, Integer> collectIngredients(UpgradeRecipe upgradeRecipe){
+    private static HashMap<Material, Integer> collectIngredients(UpgradeRecipe upgradeRecipe) {
         HashMap<Material, Integer> ingredients = new HashMap<>();
 
         for (Material mat : upgradeRecipe.getIngredients()) {
@@ -195,7 +196,7 @@ public class UpgradeOverview implements Listener {
         return ingredients;
     }
 
-    private static String capitalizeString(String string){
+    private static String capitalizeString(String string) {
         String[] name_parts = string.toLowerCase().split("_");
         for (int j = 0; j < name_parts.length; j++) {
             name_parts[j] = name_parts[j].replaceFirst(String.valueOf(name_parts[j].charAt(0)), String.valueOf(name_parts[j].charAt(0)).toUpperCase());
@@ -227,10 +228,10 @@ public class UpgradeOverview implements Listener {
 
         event.setCancelled(true);
 
-        if(event.getCurrentItem() == null)
+        if (event.getCurrentItem() == null)
             return;
 
-        if(event.getCurrentItem().getType() == Material.BARRIER){
+        if (event.getCurrentItem().getType() == Material.BARRIER) {
             open(player);
         }
 
@@ -238,10 +239,10 @@ public class UpgradeOverview implements Listener {
             return;
 
         String id = event.getCurrentItem().getItemMeta().getDisplayName().replace("\u00a7b", "");
-        for(UpgradeRecipe recipe : RecipeManager.recipes()){
-            if(recipe.getId().equals(id)){
+        for (UpgradeRecipe recipe : RecipeManager.recipes()) {
+            if (recipe.getId().equals(id)) {
 
-                if(event.isLeftClick())
+                if (event.isLeftClick())
                     RecipeManager.openRecipeView(player, recipe);
                 else {
 

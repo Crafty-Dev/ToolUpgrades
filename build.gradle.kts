@@ -1,13 +1,17 @@
 plugins {
     id("java")
     id("io.papermc.paperweight.userdev") version "2.0.0-beta.16"
+    id("xyz.jpenilla.run-paper") version "2.3.1"
+
 
 }
 
 group = "de.crafty.toolupgrades"
-version = "1.2.1-prod"
+version = "1.2.2+1.21.5"
 
-var output = project.properties["output"].toString()
+var buildOutput = project.properties["output"].toString()
+
+//var output = project.properties["output"].toString()
 
 repositories {
     mavenCentral()
@@ -26,24 +30,29 @@ repositories {
     mavenLocal() // This is needed for CraftBukkit and Spigot.
 }
 
-paperweight.reobfArtifactConfiguration = io.papermc.paperweight.userdev.ReobfArtifactConfiguration.REOBF_PRODUCTION
-
 dependencies {
     // Pick only one of these and read the comment in the repositories block.
     //compileOnly("org.spigotmc:spigot-api:1.19.2-R0.1-SNAPSHOT") // The Spigot API with no shadowing. Requires the OSS repo.
-    paperweight.paperDevBundle("1.21.4-R0.1-SNAPSHOT")
+    paperweight.paperDevBundle("1.21.5-R0.1-SNAPSHOT")
 }
 
 tasks {
 
-    jar {
-        archiveFileName.set("ToolUpgrades-${version}.jar")
-        destinationDirectory.set(file(output))
+    runServer {
+        minecraftVersion("1.21.5")
     }
 
     processResources {
         filesMatching("plugin.yml"){
             expand("version" to project.version)
         }
+    }
+
+    reobfJar {
+        outputJar.set(file("$buildOutput/${project.name}-${version}.jar"))
+    }
+
+    assemble {
+        dependsOn(reobfJar)
     }
 }

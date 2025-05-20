@@ -3,7 +3,7 @@ package de.crafty.toolupgrades.upgradehandler;
 import de.crafty.toolupgrades.ToolUpgrades;
 import de.crafty.toolupgrades.upgrade.ToolUpgrade;
 import de.crafty.toolupgrades.util.ToolManager;
-import net.minecraft.world.item.SwordItem;
+import net.minecraft.core.component.DataComponents;
 import org.bukkit.*;
 import org.bukkit.craftbukkit.inventory.CraftItemStack;
 import org.bukkit.entity.Player;
@@ -32,7 +32,7 @@ public class TeleportationHandler implements Listener {
         if (event.getAction() != Action.RIGHT_CLICK_AIR && event.getAction() != Action.RIGHT_CLICK_BLOCK || !player.isSneaking())
             return;
 
-        if (!ToolManager.hasUpgrade(usedStack, ToolUpgrade.TELEPORTATION) || !(CraftItemStack.asNMSCopy(usedStack).getItem() instanceof SwordItem))
+        if (!ToolManager.hasUpgrade(usedStack, ToolUpgrade.TELEPORTATION) || !(CraftItemStack.asNMSCopy(usedStack).has(DataComponents.WEAPON)))
             return;
 
         if ((((Damageable) usedStack.getItemMeta()).getDamage() >= usedStack.getType().getMaxDurability()))

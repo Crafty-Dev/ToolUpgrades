@@ -4,6 +4,7 @@ import de.crafty.toolupgrades.ToolUpgrades;
 import de.crafty.toolupgrades.upgrade.ToolUpgrade;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.tags.ItemTags;
 import net.minecraft.world.item.*;
 import org.bukkit.NamespacedKey;
 import org.bukkit.craftbukkit.inventory.CraftItemStack;
@@ -112,35 +113,45 @@ public class ToolManager {
 
     private static boolean canApplyTo(ItemStack stack, ToolUpgrade.Type type) {
 
-        if (type == ToolUpgrade.Type.ALL_GEAR && (CraftItemStack.asNMSCopy(stack).has(DataComponents.TOOL) || CraftItemStack.asNMSCopy(stack).getItem() instanceof ArmorItem || CraftItemStack.asNMSCopy(stack).getItem() instanceof ProjectileWeaponItem))
+        System.out.println("1");
+        if (type == ToolUpgrade.Type.ALL_GEAR && (CraftItemStack.asNMSCopy(stack).has(DataComponents.TOOL) || ToolManager.isArmor(stack) || CraftItemStack.asNMSCopy(stack).getItem() instanceof ProjectileWeaponItem))
             return true;
+        System.out.println("2");
 
         if (type == ToolUpgrade.Type.BOOK && (CraftItemStack.asNMSCopy(stack).getItem() == Items.BOOK || CraftItemStack.asNMSCopy(stack).getItem() == Items.BOOK))
             return true;
+        System.out.println("3");
 
-        if (CraftItemStack.asNMSCopy(stack).getItem() instanceof ArmorItem armor) {
+        if (ToolManager.isArmor(stack)) {
 
-            if (BOOTS.contains(armor) && type == ToolUpgrade.Type.BOOTS)
+            if (ToolManager.isBoots(stack) && type == ToolUpgrade.Type.BOOTS)
                 return true;
-            if (LEGGINGS.contains(armor) && type == ToolUpgrade.Type.LEGGINGS)
+            if (ToolManager.isLeggings(stack) && type == ToolUpgrade.Type.LEGGINGS)
                 return true;
-            if (CHESTPLATE.contains(armor) && type == ToolUpgrade.Type.CHESTPLATE)
+            if (ToolManager.isChestplate(stack) && type == ToolUpgrade.Type.CHESTPLATE)
                 return true;
-            if (HELMETS.contains(armor) && type == ToolUpgrade.Type.HELMET)
+            if (ToolManager.isHelmet(stack) && type == ToolUpgrade.Type.HELMET)
                 return true;
 
         }
+        System.out.println("4");
 
         if (CraftItemStack.asNMSCopy(stack).has(DataComponents.TOOL) && type == ToolUpgrade.Type.TOOL_AND_WEAPON)
             return true;
 
+        System.out.println("5");
+
         if (CraftItemStack.asNMSCopy(stack).has(DataComponents.TOOL) && type == ToolUpgrade.Type.TOOL)
             return true;
 
-        if ((CraftItemStack.asNMSCopy(stack).getItem() instanceof SwordItem || CraftItemStack.asNMSCopy(stack).getItem() instanceof ProjectileWeaponItem) && (type == ToolUpgrade.Type.WEAPON || type == ToolUpgrade.Type.TOOL_AND_WEAPON))
+        System.out.println("6");
+
+        if ((CraftItemStack.asNMSCopy(stack).is(ItemTags.SWORDS) || CraftItemStack.asNMSCopy(stack).getItem() instanceof ProjectileWeaponItem) && (type == ToolUpgrade.Type.WEAPON || type == ToolUpgrade.Type.TOOL_AND_WEAPON))
             return true;
 
-        return CraftItemStack.asNMSCopy(stack).getItem() instanceof ArmorItem && type == ToolUpgrade.Type.ARMOR;
+        System.out.println("7");
+
+        return ToolManager.isArmor(stack) && type == ToolUpgrade.Type.ARMOR;
     }
 
     public static List<ToolUpgrade> getUpgrades(ItemStack stack) {
@@ -151,7 +162,7 @@ public class ToolManager {
 
         String upgradeData = stack.getItemMeta().getPersistentDataContainer().getOrDefault(new NamespacedKey(ToolUpgrades.getInstance(), "upgrades"), PersistentDataType.STRING, "");
 
-        if ("".equals(upgradeData))
+        if (upgradeData.isEmpty())
             return list;
 
         String[] upgrades = upgradeData.split(";");
@@ -167,6 +178,26 @@ public class ToolManager {
         return ToolManager.getUpgrades(stack).contains(upgrade);
     }
 
+
+    private static boolean isHelmet(ItemStack stack){
+        return CraftItemStack.asNMSCopy(stack).is(ItemTags.HEAD_ARMOR);
+    }
+
+    private static boolean isChestplate(ItemStack stack){
+        return CraftItemStack.asNMSCopy(stack).is(ItemTags.CHEST_ARMOR);
+    }
+
+    private static boolean isLeggings(ItemStack stack){
+        return CraftItemStack.asNMSCopy(stack).is(ItemTags.LEG_ARMOR);
+    }
+
+    private static boolean isBoots(ItemStack stack){
+        return CraftItemStack.asNMSCopy(stack).is(ItemTags.FOOT_ARMOR);
+    }
+
+    private static boolean isArmor(ItemStack stack){
+        return isHelmet(stack) || isChestplate(stack) || isLeggings(stack) || isBoots(stack);
+    }
 
     //---------------------Mob Capture---------------------
 

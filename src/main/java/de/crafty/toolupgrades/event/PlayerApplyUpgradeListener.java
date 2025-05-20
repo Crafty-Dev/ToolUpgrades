@@ -28,10 +28,14 @@ public class PlayerApplyUpgradeListener implements Listener {
         ItemStack input_0 = inv.getItem(0);
         ItemStack input_1 = inv.getItem(1);
 
+        System.out.println(input_0 + "/" + input_1);
+
         UpgradeItem upgradeItem = UpgradeItem.getByStack(input_1);
+        System.out.println(upgradeItem);
         if (upgradeItem == null || !ToolManager.canApplyTo(input_0, upgradeItem.getUpgrade()))
             return;
 
+        System.out.println("Servus");
         ItemStack result = input_0.clone();
         result.setAmount(1);
 

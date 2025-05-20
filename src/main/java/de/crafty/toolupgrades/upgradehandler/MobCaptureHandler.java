@@ -154,7 +154,7 @@ public class MobCaptureHandler implements Listener {
         EntityType type = EntityType.valueOf(data[0]);
         CompoundTag tag = null;
         try {
-            tag = TagParser.parseTag(data[1]);
+            tag = TagParser.parseCompoundFully(data[1]);
         } catch (CommandSyntaxException e) {
             Bukkit.getConsoleSender().sendMessage(ToolUpgrades.PREFIX + "Failed to read NBT Data");
         }
@@ -315,7 +315,7 @@ public class MobCaptureHandler implements Listener {
             EntityType type = EntityType.valueOf(data[0]);
             CompoundTag tag = null;
             try {
-                tag = TagParser.parseTag(data[1]);
+                tag = TagParser.parseCompoundFully(data[1]);
             } catch (CommandSyntaxException e) {
                 Bukkit.getConsoleSender().sendMessage(ToolUpgrades.PREFIX + "Failed to read NBT Data");
             }
